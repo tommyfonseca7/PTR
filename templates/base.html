@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <section class="header">
+        <a href="{{ url_for('index')}}">
+            <img src="../static/images/logo.png" alt="" class="headerlogo-img">
+        </a>
+        <a href="{{ url_for('login')}}"><h1>Login</h1></a>
+        <a href=""><h1>Provas</h1></a>
+    </section>
+    
+
+
+{% block content %}
+{% endblock %}
+
+<footer>
+    <div class="support">
+        <h2 class="suport-text">Suporte</h2>
+        <a href="" class="contact-link">Contactos</a>
+        <a href="" class="faq-link">FAQ</a>
+    </div>
+    <div class="copyright">
+        <img src="../static/images/logo.png" alt="">
+         <p>PTR Poomsae Training Refereeing, Copyright de (Tomás Esteves Cardoso e Tomás Ferreira Fonseca), ULHT</p>
+    </div>
+   
+</footer>
+<script src="../static/scripts/script.js"></script>
+</body>
+</html>
