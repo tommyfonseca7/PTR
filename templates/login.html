@@ -3,17 +3,24 @@
 
 {% block content%}
 <br> <br>
-<form action="" method="POST">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username">
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
-    <input type="submit" value="Login">
-  </form>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
 
-  <a href="{{ url_for('newuser')}}">
-    <button>NEW</button>
-  </a>
+  {{ form.username.label }}
+  {{ form.username() }}
+  <br>
+  {{ form.password.label }}
+  {{ form.password() }}
+  <br><br>
+  {{ form.submit() }}
+
+
+
+
+{% for message in get_flashed_messages() %}
+  <div class="alert">
+      <p>{{ message}}</p> 
+  </div>
+{% endfor %}
 
 {% endblock%}

@@ -219,3 +219,17 @@ form {
     margin: 0 auto;
     color: white;
   }
+
+
+
+
+  /* DASHBOARD */
+
+  .dashboard-hello{
+    color: white;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center ;
+  }
+
