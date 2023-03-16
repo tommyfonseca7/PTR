@@ -36,6 +36,7 @@ class Users(db.Model, UserMixin):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     user_perms = db.Column(db.Integer, nullable=False)
 
+<<<<<<< HEAD
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
@@ -70,6 +71,8 @@ class Poomsae(db.Model, UserMixin):
     name = db.Column(db.String(200), nullable=False, unique=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
+=======
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 
     @property
     def password(self):
@@ -85,6 +88,14 @@ class Poomsae(db.Model, UserMixin):
     def __repr__(self):
         return '<NAME %r>' % self.username
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -117,7 +128,10 @@ def admin():
 
 @app.route("/newuser", methods = ['GET', 'POST'])
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 def newuser():
     username = None
     form = UserForm()
@@ -171,6 +185,7 @@ def deleteuser(id):
         return render_template("update.html", form=form, username=username, user_to_delete = user_to_delete, our_users=our_users)
 
 
+<<<<<<< HEAD
 def newAthlete():
     username = None
     form = AthleteForm()
@@ -337,10 +352,13 @@ def deletejury(id):
     except: 
         flash("There was a prbolem deleting user, try again!")
         return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
+=======
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 
 
 
 
+<<<<<<< HEAD
 
 class TournamentForm(FlaskForm):
 	name = StringField("name:", validators=[DataRequired()])
@@ -354,6 +372,8 @@ class JuryForm(FlaskForm):
 	user_perms = IntegerField('User Permissions (1 or 2)', validators=[DataRequired()])
 	submit = SubmitField("Submit")
 
+=======
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 class UserForm(FlaskForm):
 	username = StringField("Username:", validators=[DataRequired()])
 	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
@@ -361,6 +381,7 @@ class UserForm(FlaskForm):
 	user_perms = IntegerField('User Permissions (1 or 2)', validators=[DataRequired()])
 	submit = SubmitField("Submit")
 
+<<<<<<< HEAD
 class AthleteForm(FlaskForm):
 	username = StringField("Username:", validators=[DataRequired()])
 	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
@@ -368,6 +389,8 @@ class AthleteForm(FlaskForm):
 	age = IntegerField('Age:', validators =[DataRequired()])
 	submit = SubmitField("Submit")
 
+=======
+>>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 class LoginForm(FlaskForm):
 	username = StringField("Username", validators=[DataRequired()])
 	password = PasswordField("Password", validators=[DataRequired()])
