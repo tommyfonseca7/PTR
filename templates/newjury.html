@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}PTR - Add Jury{% endblock %}
+
+{% block content%}
+<br> <br>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+
+    {{ form.username.label }}
+    {{ form.username() }}
+    <br>
+    {{ form.password_hash.label }}
+    {{ form.password_hash() }}
+    <br>
+    {{ form.password_hash2.label }}
+    {{ form.password_hash2() }}
+    <br>
+    {{ form.type_of_jury.label }}
+    {{ form.type_of_jury() }}
+    <br><br>
+    {{ form.submit() }}
+
+</form>
+
+{% for message in get_flashed_messages() %}
+    <div class="alert">
+       <p>{{ message}}</p> 
+    </div>
+{% endfor %}
+
+<br><br>
+<div class="fiy">
+    {% for our_jury in our_jurys %}
+    <p>
+        {{ our_jury.id }} - <a href="{{url_for('updatejury', id=our_jury.id)}}">{{ our_jury.username }}</a> - {{ our_jury.password_hash }} - {{ our_jury.date_added }} - User perms {{ our_jury.type_of_jury }} -  <a href="{{url_for('deletejury', id=our_jury.id)}}">Delete</a>
+    </p>
+    {% endfor %}
+</div>
+
+
+
+  
+{% endblock%}

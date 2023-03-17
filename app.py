@@ -36,7 +36,6 @@ class Users(db.Model, UserMixin):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     user_perms = db.Column(db.Integer, nullable=False)
 
-<<<<<<< HEAD
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
@@ -56,7 +55,6 @@ class Jury(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     type_of_jury = db.Column(db.String(200))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    user_perms = db.Column(db.Integer, nullable=False)
 
 class Athlete(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,8 +69,6 @@ class Poomsae(db.Model, UserMixin):
     name = db.Column(db.String(200), nullable=False, unique=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
-=======
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 
     @property
     def password(self):
@@ -88,14 +84,6 @@ class Poomsae(db.Model, UserMixin):
     def __repr__(self):
         return '<NAME %r>' % self.username
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -128,10 +116,6 @@ def admin():
 
 @app.route("/newuser", methods = ['GET', 'POST'])
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 def newuser():
     username = None
     form = UserForm()
@@ -185,26 +169,22 @@ def deleteuser(id):
         return render_template("update.html", form=form, username=username, user_to_delete = user_to_delete, our_users=our_users)
 
 
-<<<<<<< HEAD
 def newAthlete():
-    username = None
+    name = None
     form = AthleteForm()
     if form.validate_on_submit():
-        hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-        athlete = Athlete.query.filter_by(username=form.username.data).first()
+        athlete = Athlete.query.filter_by(name=form.name.data).first()
         if athlete is None:
-            athlete = Athlete(username= form.username.data, password_hash = hashed_pw, user_perms = form.user_perms.data, age = form.age.data)
+            athlete = Athlete(name = form.name.data,list_of_poomsaes = form.list_of_poomsaes.data, age = form.age.data)
             db.session.add(athlete)
             db.session.commit()
-        username = form.username.data
-        form.username.data = ''
-        form.password_hash.data = ''
-        form.password_hash2.data = ''
-        form.user_perms.data = ''
+        name = form.name.data
+        form.name.data = ''
+        form.list_of_poomsaes.data = ''
         form.age.data = ''
         flash("Athlete registered sucessfully!")
-    our_users = Users.query.order_by(Users.date_added)
-    return render_template("newuser.html", username=username, form=form, our_users=our_users)
+    our_athletes = Athlete.query.order_by(Users.date_added)
+    return render_template("newathlete.html", name=name, form=form, our_athletes=our_athletes)
 
 
 @app.route("/updateathlete/<int:id>", methods = ['GET', 'POST'])
@@ -212,8 +192,8 @@ def updateAthlete(id):
     form = AthleteForm()
     athlete_to_update = Athlete.query.get_or_404(id)
     if request.method == "POST":
-        athlete_to_update.username = request.form['username']
-        athlete_to_update.password_hash = generate_password_hash(request.form['password_hash'], "sha256")
+        athlete_to_update.name = request.form['name']
+        athlete_to_update.list_of_poomsaes = request.form['list_of_poomsaes']
         athlete_to_update.age = request.form['age']         
         try:
             db.session.commit()
@@ -228,7 +208,7 @@ def updateAthlete(id):
 
 @app.route('/deleteathlete/<int:id>')
 def deleteathlete(id):
-    username = None
+    name = None
     form = AthleteForm()
     athlete_to_delete = Athlete.query.get_or_404(id)
     try:
@@ -236,10 +216,10 @@ def deleteathlete(id):
         db.session.commit()
         flash("Athlete deleted sucessfully!")
         our_users = Users.query.order_by(Users.date_added)
-        return render_template("newathlete.html", form=form, username=username, athlete_to_delete = athlete_to_delete, our_users=our_users)
+        return render_template("newathlete.html", form=form, name=name, athlete_to_delete = athlete_to_delete, our_athletes=our_athletes)
     except: 
-        flash("There was a prbolem deleting user, try again!")
-        return render_template("update.html", form=form, username=username, athlete_to_delete = athlete_to_delete, our_users=our_users)
+        flash("There was a prbolem deleting the athlete, try again!")
+        return render_template("update.html", form=form, name=name, athlete_to_delete = athlete_to_delete, our_athletes=our_athletes)
 
 
 def newjury():
@@ -247,20 +227,19 @@ def newjury():
     form = JuryForm()
     if form.validate_on_submit():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-        Jury = Athlete.query.filter_by(username=form.username.data).first()
-        if athlete is None:
-            athlete = Athlete(username= form.username.data, password_hash = hashed_pw, user_perms = form.user_perms.data, type_of_jury = form.type_of_jury.data)
-            db.session.add(athlete)
+        jury = Jury.query.filter_by(username=form.username.data).first()
+        if jury is None:
+            jury = Athlete(username= form.username.data, password_hash = hashed_pw, type_of_jury = form.type_of_jury.data)
+            db.session.add(jury)
             db.session.commit()
         username = form.username.data
         form.username.data = ''
         form.password_hash.data = ''
         form.password_hash2.data = ''
-        form.user_perms.data = ''
         form.type_of_jury.data = ''
         flash("Jury registered sucessfully!")
-    our_users = Users.query.order_by(Users.date_added)
-    return render_template("newjury.html", username=username, form=form, our_users=our_users)
+    our_jurys = Jury.query.order_by(Users.date_added)
+    return render_template("newjury.html", username=username, form=form, our_jurys=our_jurys)
 
 
 @app.route("/updatejury/<int:id>", methods = ['GET', 'POST'])
@@ -286,16 +265,16 @@ def updatejury(id):
 def deletejury(id):
     username = None
     form = JuryForm()
-    jury_to_delete = Athlete.query.get_or_404(id)
+    jury_to_delete = Jury.query.get_or_404(id)
     try:
         db.session.delete(jury_to_delete)
         db.session.commit()
         flash("Jury deleted sucessfully!")
-        our_users = Users.query.order_by(Users.date_added)
-        return render_template("newjury.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
+        our_jurys = Jury.query.order_by(Jury.date_added)
+        return render_template("newjury.html", form=form, username=username, jury_to_delete = jury_to_delete, our_jurys=our_jurys)
     except: 
         flash("There was a prbolem deleting user, try again!")
-        return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
+        return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_jurys=our_jurys)
 
 
 def newPoomsae():
@@ -352,13 +331,10 @@ def deletejury(id):
     except: 
         flash("There was a prbolem deleting user, try again!")
         return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
-=======
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 
 
 
 
-<<<<<<< HEAD
 
 class TournamentForm(FlaskForm):
 	name = StringField("name:", validators=[DataRequired()])
@@ -369,11 +345,8 @@ class JuryForm(FlaskForm):
 	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
 	password_hash2 = PasswordField('Confirm Password:', validators=[DataRequired()])
 	type_of_jury = StringField("Type:", validators=[DataRequired()])
-	user_perms = IntegerField('User Permissions (1 or 2)', validators=[DataRequired()])
 	submit = SubmitField("Submit")
 
-=======
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 class UserForm(FlaskForm):
 	username = StringField("Username:", validators=[DataRequired()])
 	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
@@ -381,7 +354,6 @@ class UserForm(FlaskForm):
 	user_perms = IntegerField('User Permissions (1 or 2)', validators=[DataRequired()])
 	submit = SubmitField("Submit")
 
-<<<<<<< HEAD
 class AthleteForm(FlaskForm):
 	username = StringField("Username:", validators=[DataRequired()])
 	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
@@ -389,8 +361,6 @@ class AthleteForm(FlaskForm):
 	age = IntegerField('Age:', validators =[DataRequired()])
 	submit = SubmitField("Submit")
 
-=======
->>>>>>> 5a91ad295c03f13227dc4052f52c4c47efe7df20
 class LoginForm(FlaskForm):
 	username = StringField("Username", validators=[DataRequired()])
 	password = PasswordField("Password", validators=[DataRequired()])
