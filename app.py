@@ -298,39 +298,7 @@ def newPoomsae():
     return render_template("newjury.html", username=username, form=form, our_users=our_users)
 
 
-@app.route("/updatejury/<int:id>", methods = ['GET', 'POST'])
-def updatejury(id):
-    form = JuryForm()
-    jury_to_update = Jury.query.get_or_404(id)
-    if request.method == "POST":
-        jury_to_update.username = request.form['username']
-        jury_to_update.password_hash = generate_password_hash(request.form['password_hash'], "sha256")
-        jury_to_update.type_of_jury = request.form['type_of_jury']         
-        try:
-            db.session.commit()
-            flash("Jury Updated sucessfully")
-            return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
-        except:
-            flash("Error!")
-            return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
-    else:
-        return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
 
-
-@app.route('/deletejury/<int:id>')
-def deletejury(id):
-    username = None
-    form = JuryForm()
-    jury_to_delete = Athlete.query.get_or_404(id)
-    try:
-        db.session.delete(jury_to_delete)
-        db.session.commit()
-        flash("Jury deleted sucessfully!")
-        our_users = Users.query.order_by(Users.date_added)
-        return render_template("newjury.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
-    except: 
-        flash("There was a prbolem deleting user, try again!")
-        return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_users=our_users)
 
 
 
