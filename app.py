@@ -104,6 +104,10 @@ def login():
             flash("That user doesn't exist")
     return render_template("login.html", form=form)
 
+@app.route("/juri_interface", methods = ['GET', 'POST'])
+def juri_interface():
+    return render_template("juriInterface.html")
+
 
 @app.route("/dashboard", methods = ['GET', 'POST'])
 @login_required

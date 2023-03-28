@@ -233,3 +233,101 @@ form {
     align-items: center ;
   }
 
+
+  /* JURI INTERFACE */
+
+  .juri-header{
+    width: 100vw;
+    height: 100px;
+    left: 0px;
+    top: 0px;
+    text-align: center;
+    background: #00193A;
+  }
+
+  .middle-top-logo{
+    width: 100px;
+    height: 100px;
+  }
+
+
+
+.title { 
+    width: 100vw;
+    height: 100px;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.compt{
+   display: flex;
+   justify-content: center;
+   width: 100vw;
+   
+}
+
+.button-reduce-tree{
+    width: 250px;
+    height: 250px;
+
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+}
+
+.button-reduce-tree:hover{
+    width: 250px;
+    height: 250px;
+
+    color: white;
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+}
+
+.compt-text { 
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    width: 250px;
+    height: 250px;
+
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+}
+
+.button-reduce-one{
+    width: 250px;
+    height: 250px;
+
+
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+}
+
+.button-reduce-one:hover{
+    width: 250px;
+    height: 250px;
+
+
+    color: white;
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+}
+  
