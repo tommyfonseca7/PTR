@@ -2,12 +2,13 @@ Poomsae Tournament Refereeing:
 Made by : Tomás Cardoso , a22003179
           Tomás Fonseca, a22005407
 
-How to start the program: 
+How to start the program: Have flask installed (pip install flask)
+Have sql-alchemy install
+Have sql-alchemy + flask combo installed
+and do flask run
 
 
 Things to do this week:
 
-- Finish everything that deals with the Poomsae.
-- Start moving towards doing the Real-Time refresh of the webpages.
-- Start giving the priveledges needed.
-- Start to work on the frontend.
+- Finish the work with the Administrator
+- Make the game.
