@@ -39,34 +39,46 @@ class Users(db.Model, UserMixin):
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    listJury = db.relationship('Jury', backref = 'Category')
-    listAthletes = db.relationship('Athletes', backref = 'Category')
+    listJury = db.relationship('Jury', backref = 'category')
+    listAthletes = db.relationship('Athlete', backref = 'category')
 
 class Tournament(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    listJury = db.relationship('Jury', backref = 'Tournament')
-    listAthletes = db.relationship('Athletes', backref = 'Tournament')
-    list_of_Poomsaes = db.relationship('Poomsae', backref = 'Tournament')
+    listJury = db.relationship('Jury', backref = 'tournament')
+    listAthletes = db.relationship('Athlete', backref = 'tournament')
+    list_of_Poomsaes = db.relationship('Poomsae', backref = 'tournament')
 
 class Jury(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), nullable=False, unique=True)
+    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=False)
+    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
     password_hash = db.Column(db.String(128))
     type_of_jury = db.Column(db.String(200))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 
 class Athlete(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), nullable=False, unique=True)
-    list_of_poomsaes = db.relationship('Poomsae', backref = 'Athlete')
+    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=False)
+    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
+    list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae', backref='athlete')
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+    athlete_poomsae = db.Table('athlete_poomsae',
+    db.Column('athlete_id', db.Integer, db.ForeignKey('athlete.id'), primary_key=True),
+    db.Column('poomsae_id', db.Integer, db.ForeignKey('poomsae.id'), primary_key=True)
+)
 
 
 class Poomsae(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
+    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -83,6 +95,7 @@ class Poomsae(db.Model, UserMixin):
 
     def __repr__(self):
         return '<NAME %r>' % self.username
+
 
 @app.route("/")
 def index():
@@ -119,7 +132,6 @@ def admin():
     return render_template("admin.html")
 
 @app.route("/newuser", methods = ['GET', 'POST'])
-
 def newuser():
     username = None
     form = UserForm()
@@ -337,4 +349,5 @@ class LoginForm(FlaskForm):
 	username = StringField("Username", validators=[DataRequired()])
 	password = PasswordField("Password", validators=[DataRequired()])
 	submit = SubmitField("Submit")
+    
 
