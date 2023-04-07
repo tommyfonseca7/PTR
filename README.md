@@ -8,7 +8,7 @@ Have sql-alchemy + flask combo installed
 and do flask run
 
 
-Things to do this week:
+Thing to do until the end:
 
-- Finish the work with the Administrator
-- Make the game.
+- Finish the poomsae system
+- Overhaul on the website functionalities
