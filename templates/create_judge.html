@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}PTR - Add Jury{% endblock %}
+{% block title %}PTR - Add Judge{% endblock %}
 
 {% block content%}
 <br> <br>
@@ -9,6 +9,9 @@
     {{ form.username.label }}
     {{ form.username() }}
     <br>
+    {{ form.real_name.label }}
+    {{ form.real_name() }}
+    <br>
     {{ form.password_hash.label }}
     {{ form.password_hash() }}
     <br>
@@ -17,6 +20,12 @@
     <br>
     {{ form.type_of_jury.label }}
     {{ form.type_of_jury() }}
+    <br><br>
+    {{ form.category_name.label }}
+    {{ form.category_name() }}
+    <br><br>
+    {{ form.tournament_id.label }}
+    {{ form.tournament_id() }}
     <br><br>
     {{ form.submit() }}
 
@@ -28,16 +37,10 @@
     </div>
 {% endfor %}
 
-<br><br>
-<div class="fiy">
-    {% for our_jury in our_jurys %}
-    <p>
-        {{ our_jury.id }} - <a href="{{url_for('updatejury', id=our_jury.id)}}">{{ our_jury.username }}</a> - {{ our_jury.password_hash }} - {{ our_jury.date_added }} - User perms {{ our_jury.type_of_jury }} -  <a href="{{url_for('deletejury', id=our_jury.id)}}">Delete</a>
-    </p>
-    {% endfor %}
-</div>
-
-
-
+{% for our_judges in our_judges %}
+<p>
+    {{ our_judges.id }} - {{ our_judges.username }}</a>{{ our_judges.real_name }}</a> - {{ our_judges.password_hash }} - {{ our_judges.date_added }} - User perms {{ our_judges.user_type }}
+</p>
+{% endfor %}
   
 {% endblock%}

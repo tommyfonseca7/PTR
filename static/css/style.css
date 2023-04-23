@@ -155,6 +155,8 @@ footer{
 
 /* LOGIN */
 
+
+
 form {
     width: 300px;
     margin: 0 auto;
@@ -331,3 +333,25 @@ form {
     transition: background-color 0.5s ease;
 }
   
+
+#real_name{
+    float: right;
+    margin-left: 56%;
+}
+
+#update_user{
+    align-self: center;
+}
+
+#user-table{
+    border-collapse: collapse;
+    width: 40%;
+    margin-top: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}

@@ -2,13 +2,16 @@
 {% block title %}PTR - LogIn{% endblock %}
 
 {% block content%}
-<h1>Update User!</h1>
+<h1 id = "update_user">Update User</h1>
 <br> <br>
-<form action="/updateuser/{{user_to_update.id}}" method="post">
+<form action="/update_user/{{user_to_update.id}}" method="post">
     {{ form.hidden_tag() }}
 
     {{ form.username.label }}
     {{ form.username(value = user_to_update.username) }}
+    <br>
+    {{ form.real_name.label }}
+    {{ form.real_name(value = user_to_update.real_name) }}
     <br>
     {{ form.password_hash.label }}
     {{ form.password_hash(value = user_to_update.passwordhash) }}
@@ -16,12 +19,10 @@
     {{ form.password_hash2.label }}
     {{ form.password_hash2(value = user_to_update.passwordhash2) }}
     <br>
-    {{ form.user_perms.label }}
-    {{ form.user_perms() }}
     <br><br>
     {{ form.submit() }}
 
-    <a href="{{url_for('deleteuser', id=id)}}">Delete</a>
+    <a href="{{url_for('delete_user', id=id)}}">Delete</a>
 
 </form>
 
@@ -33,12 +34,6 @@
 
 <br><br>
 <div class="fiy">
-    {% for our_user in our_users %}
-    <p>
-        {{ our_user.id }} - {{ our_user.username }} - {{ our_user.password_hash }} - {{ our_user.date_added }}
-    </p>
-    {% endfor %}
-</div>
 
 
 
