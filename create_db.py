@@ -1,26 +1,20 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+import mysql.connector
 
-db = SQLAlchemy()
+mydb = mysql.connector.connect(
+	host="localhost",
+	user="root",
+	passwd = "admin",
+	)
+	
 
-def create_app():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/mydatabase'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+my_cursor = mydb.cursor()
 
-    db.init_app(app)
+my_cursor.execute("CREATE DATABASE PTR")
 
-    @app.route('/')
-    def index():
-        return 'Hello, world!'
-
-    return app
+my_cursor.execute("SHOW DATABASES")
+for db in my_cursor:
+	print(db)
 
 
-app = create_app()
 
-with app.app_context():
-    db.create_all()
-
-if __name__ == '__main__':
-    app.run()
+    

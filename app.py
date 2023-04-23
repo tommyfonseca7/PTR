@@ -1,22 +1,38 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from enum import Enum
+from os import abort
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
+import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, IntegerField
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms import StringField, SubmitField, PasswordField, IntegerField, SelectField
+from wtforms.validators import DataRequired, EqualTo, InputRequired
+
+
+
+
+
 
 #Flask Instance
 app = Flask(__name__)
 
+secret_key = secrets.token_hex(32)
 #Add Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost/ptr'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = secret_key
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_DB'] = 'MyDB'
 
-app.config['SECRET_KEY'] = "random"
+
 #Initialize Database
 db = SQLAlchemy(app)
+app.app_context().push()
 migrate = Migrate(app, db)
 
 #Flask_Login
@@ -24,84 +40,34 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+from API.api import user_api
+app.register_blueprint(user_api)
+from models import Users,Category,Tournament,Judge,Athlete,Poomsae
+
+admin_user = Users(
+    username='admin',
+    real_name='Admin User',
+    password_hash='admin',
+    user_type='admin'
+)
+
+db.session.add(admin_user)
+db.session.commit()
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
 
-class Users(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False, unique=True)
-    password_hash = db.Column(db.String(128))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    user_perms = db.Column(db.Integer, nullable=False)
-
-class Category(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False, unique=True)
-    listJury = db.relationship('Jury', backref = 'category')
-    listAthletes = db.relationship('Athlete', backref = 'category')
-
-class Tournament(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False, unique=True)
-    listJury = db.relationship('Jury', backref = 'tournament')
-    listAthletes = db.relationship('Athlete', backref = 'tournament')
-    list_of_Poomsaes = db.relationship('Poomsae', backref = 'tournament')
-
-class Jury(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False, unique=True)
-    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=False)
-    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
-    password_hash = db.Column(db.String(128))
-    type_of_jury = db.Column(db.String(200))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-
-class Athlete(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    age = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False, unique=True)
-    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=False)
-    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
-    list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae', backref='athlete')
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-    athlete_poomsae = db.Table('athlete_poomsae',
-    db.Column('athlete_id', db.Integer, db.ForeignKey('athlete.id'), primary_key=True),
-    db.Column('poomsae_id', db.Integer, db.ForeignKey('poomsae.id'), primary_key=True)
-)
-
-
-class Poomsae(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False, unique=True)
-    tournament_id = db.Column(db.String(200), db.ForeignKey('tournament.id'), nullable=False)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-    @property
-    def password(self):
-        raise AttributeError('password is not a readable atribute')
-    
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return '<NAME %r>' % self.username
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/login", methods = ['GET', 'POST'])
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -110,56 +76,95 @@ def login():
             #Check Pass_hash
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
-                return redirect(url_for('dashboard'))
+                # Check if there is a stored URL in the session
+                if 'next' in session:
+                    # Redirect the user to the stored URL
+                    return redirect(session['next'])
+                # If there is no stored URL, redirect to the dashboard
+                return redirect(url_for('index'))
             else:
                 flash("Wrong password - Try Again!")
         else:
             flash("That user doesn't exist")
     return render_template("login.html", form=form)
 
-@app.route("/juri_interface", methods = ['GET', 'POST'])
-def juri_interface():
-    return render_template("juriInterface.html")
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 
-@app.route("/dashboard", methods = ['GET', 'POST'])
+@app.route("/admin_dashboard", methods = ['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("dashboard_admin.html")
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
 
 @app.route("/admin")
+@login_required
 def admin():
     return render_template("admin.html")
 
-@app.route("/newuser", methods = ['GET', 'POST'])
-def newuser():
+@app.route("/get_users", methods = ['GET'])
+def get_users():
+    users = Users.query.all()
+    return render_template('users_admin_page.html', users=users)
+
+@app.route("/get_judges", methods = ['GET'])
+def get_judges():
+    judges = Judge.query.all()
+    return render_template('users_admin_page.html', judges=judges)
+
+@app.route("/get_tournaments", methods = ['GET'])
+def get_tournaments():
+    tournaments = Tournament.query.all()
+    return render_template('users_admin_page.html', tournaments=tournaments)
+
+@app.route("/get_category", methods = ['GET'])
+def get_category():
+    category = Category.query.all()
+    return render_template('users_admin_page.html', category=category)
+
+@app.route("/create_user", methods = ['GET', 'POST'])
+def create_user():
     username = None
     form = UserForm()
     if form.validate_on_submit():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
         user = Users.query.filter_by(username=form.username.data).first()
         if user is None:
-            user = Users(username= form.username.data, password_hash = hashed_pw, user_perms = form.user_perms.data)
+            user = Users(username = form.username.data, real_name = form.real_name.data, password_hash = hashed_pw, user_type = 'user')
             db.session.add(user)
             db.session.commit()
         username = form.username.data
         form.username.data = ''
+        form.real_name.data = ''
         form.password_hash.data = ''
         form.password_hash2.data = ''
-        form.user_perms.data = ''
-        flash("Resgitrado com sucesso! ")
+        flash("Registado com sucesso!")
     our_users = Users.query.order_by(Users.date_added)
-    return render_template("newuser.html", username=username, form=form, our_users=our_users)
+    return render_template("create_user.html", username=username, form=form, our_users=our_users)
 
-@app.route("/updateuser/<int:id>", methods = ['GET', 'POST'])
-def updateuser(id):
+@app.route("/update_user/<int:id>", methods = ['GET', 'POST'])
+def update_user(id):
     form = UserForm()
     user_to_update = Users.query.get_or_404(id)
     if request.method == "POST":
+        print(request.form)
         user_to_update.username = request.form['username']
-        user_to_update.password_hash = generate_password_hash(request.form['password_hash'], "sha256")
-        user_to_update.user_perms = request.form['user_perms']         
+        user_to_update.real_name = request.form['real_name']
+        user_to_update.password_hash = request.form['password_hash']   
+        user_to_update.password_hash2 = request.form['password_hash2'] 
+        if(user_to_update.password_hash != user_to_update.password_hash2) :
+            flash("Passwords não são iguais!")
+            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+        user_to_update.password_hash = generate_password_hash(user_to_update.password_hash,"sha256") 
+        user_to_update.password_hash2 = generate_password_hash(user_to_update.password_hash,"sha256") 
         try:
+            
             db.session.commit()
             flash("User Updated sucessfully")
             return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
@@ -169,179 +174,110 @@ def updateuser(id):
     else:
         return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
 
-@app.route('/deleteuser/<int:id>')
-def deleteuser(id):
-    username = None
-    form = UserForm()
+@app.route('/delete_user/<int:id>')
+def delete_user(id):
     user_to_delete = Users.query.get_or_404(id)
     try:
         db.session.delete(user_to_delete)
         db.session.commit()
         flash("User deleted sucessfully!")
         our_users = Users.query.order_by(Users.date_added)
-        return render_template("newuser.html", form=form, username=username, user_to_delete = user_to_delete, our_users=our_users)
+        return redirect(url_for('create_user'))
     except: 
         flash("There was a prbolem deleting user, try again!")
-        return render_template("update.html", form=form, username=username, user_to_delete = user_to_delete, our_users=our_users)
+        return redirect(url_for('get_users'))
 
+@app.route('/juri_interface', methods = ['GET'])
+@login_required
+def judgeInterface():
+    if current_user.user_type not in ['admin', 'judge','superadmin']:
+        abort(403)
+    return render_template("juriInterface.html")
 
-def newAthlete():
-    name = None
-    form = AthleteForm()
-    if form.validate_on_submit():
-        athlete = Athlete.query.filter_by(name=form.name.data).first()
-        if athlete is None:
-            athlete = Athlete(name = form.name.data,list_of_poomsaes = form.list_of_poomsaes.data, age = form.age.data)
-            db.session.add(athlete)
-            db.session.commit()
-        name = form.name.data
-        form.name.data = ''
-        form.list_of_poomsaes.data = ''
-        form.age.data = ''
-        flash("Athlete registered sucessfully!")
-    our_athletes = Athlete.query.order_by(Users.date_added)
-    return render_template("newathlete.html", name=name, form=form, our_athletes=our_athletes)
-
-
-@app.route("/updateathlete/<int:id>", methods = ['GET', 'POST'])
-def updateAthlete(id):
-    form = AthleteForm()
-    athlete_to_update = Athlete.query.get_or_404(id)
-    if request.method == "POST":
-        athlete_to_update.name = request.form['name']
-        athlete_to_update.list_of_poomsaes = request.form['list_of_poomsaes']
-        athlete_to_update.age = request.form['age']         
-        try:
-            db.session.commit()
-            flash("Athlete Updated sucessfully")
-            return render_template("update.html", form=form, athlete_to_update = athlete_to_update, id = id)
-        except:
-            flash("Error!")
-            return render_template("update.html", form=form, athlete_to_update = athlete_to_update, id = id)
-    else:
-        return render_template("update.html", form=form, athlete_to_update = athlete_to_update, id = id)
-
-
-@app.route('/deleteathlete/<int:id>')
-def deleteathlete(id):
-    name = None
-    form = AthleteForm()
-    athlete_to_delete = Athlete.query.get_or_404(id)
-    try:
-        db.session.delete(athlete_to_delete)
-        db.session.commit()
-        flash("Athlete deleted sucessfully!")
-        our_users = Users.query.order_by(Users.date_added)
-        return render_template("newathlete.html", form=form, name=name, athlete_to_delete = athlete_to_delete, our_athletes=our_athletes)
-    except: 
-        flash("There was a prbolem deleting the athlete, try again!")
-        return render_template("update.html", form=form, name=name, athlete_to_delete = athlete_to_delete, our_athletes=our_athletes)
-
-
-def newjury():
+@app.route('/create_judge' , methods=['GET', 'POST'])
+def create_judge():
+    form = JudgeForm()
     username = None
-    form = JuryForm()
     if form.validate_on_submit():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-        jury = Jury.query.filter_by(username=form.username.data).first()
-        if jury is None:
-            jury = Athlete(username= form.username.data, password_hash = hashed_pw, type_of_jury = form.type_of_jury.data)
-            db.session.add(jury)
+        user = Users.query.filter_by(username=form.username.data).first()
+        category = Category.query.filter_by(name=form.category_name.data).first()
+        if user is None:
+            user = Users(username=form.username.data, real_name=form.real_name.data, password_hash=hashed_pw, user_type= 'judge')
+            db.session.add(user)
             db.session.commit()
+        if category is None:
+            category = Category(name=form.category_name.data)
+            db.session.add(category)
+            db.session.commit()
+        
+        judge = Judge(user=user, category_name=category.name, tournament_id=form.tournament_id.data, type_of_jury=form.type_of_jury.data)
         username = form.username.data
         form.username.data = ''
+        form.real_name.data = ''
         form.password_hash.data = ''
         form.password_hash2.data = ''
-        form.type_of_jury.data = ''
-        flash("Jury registered sucessfully!")
-    our_jurys = Jury.query.order_by(Users.date_added)
-    return render_template("newjury.html", username=username, form=form, our_jurys=our_jurys)
 
-
-@app.route("/updatejury/<int:id>", methods = ['GET', 'POST'])
-def updatejury(id):
-    form = JuryForm()
-    jury_to_update = Jury.query.get_or_404(id)
-    if request.method == "POST":
-        jury_to_update.username = request.form['username']
-        jury_to_update.password_hash = generate_password_hash(request.form['password_hash'], "sha256")
-        jury_to_update.type_of_jury = request.form['type_of_jury']         
-        try:
-            db.session.commit()
-            flash("Jury Updated sucessfully")
-            return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
-        except:
-            flash("Error!")
-            return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
-    else:
-        return render_template("update.html", form=form, jury_to_update = jury_to_update, id = id)
-
-
-@app.route('/deletejury/<int:id>')
-def deletejury(id):
-    username = None
-    form = JuryForm()
-    jury_to_delete = Jury.query.get_or_404(id)
-    try:
-        db.session.delete(jury_to_delete)
+        db.session.add(user)
+        db.session.add(judge)
         db.session.commit()
-        flash("Jury deleted sucessfully!")
-        our_jurys = Jury.query.order_by(Jury.date_added)
-        return render_template("newjury.html", form=form, username=username, jury_to_delete = jury_to_delete, our_jurys=our_jurys)
-    except: 
-        flash("There was a prbolem deleting user, try again!")
-        return render_template("update.html", form=form, username=username, jury_to_delete = jury_to_delete, our_jurys=our_jurys)
+        flash("wtf fufou")
+    our_users = Users.query.order_by(Users.date_added)
+    return render_template("create_judge.html", username=username, form=form, our_users=our_users)
 
-
-def newPoomsae():
-    name = None
-    form = JuryForm()
+@app.route('/create_admin', methods=['GET', 'POST'])
+@login_required
+def create_admin():
+    if current_user.user_type != 'superadmin':
+        abort(403) # forbidden
+    username = None
+    form = AdminForm()
     if form.validate_on_submit():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-        Jury = Athlete.query.filter_by(username=form.username.data).first()
-        if athlete is None:
-            athlete = Athlete(username= form.username.data, password_hash = hashed_pw, user_perms = form.user_perms.data, type_of_jury = form.type_of_jury.data)
-            db.session.add(athlete)
+        user = Users.query.filter_by(username=form.username.data).first()
+        if user is None:
+            form.user_type.data = form.type_of_admin
+            user = Users(username = form.username.data, password_hash = hashed_pw, user_type = form.user_type.data)
+            db.session.add(user)
             db.session.commit()
         username = form.username.data
-        form.username.data = ''
+        form.real_name.data = ''
         form.password_hash.data = ''
         form.password_hash2.data = ''
         form.user_perms.data = ''
-        form.type_of_jury.data = ''
-        flash("Jury registered sucessfully!")
+        flash("Registado com sucesso!")
     our_users = Users.query.order_by(Users.date_added)
-    return render_template("newjury.html", username=username, form=form, our_users=our_users)
+    return render_template("create_admin.html", username=username, form=form, our_users=our_users)
 
 
 
-
-
-
+class UserType(Enum):
+    user = 'user'
+    jury = 'jury'
+    admin = 'admin'
+    athlete = 'athlete'
+    
 
 
 class TournamentForm(FlaskForm):
 	name = StringField("name:", validators=[DataRequired()])
 
 
-class JuryForm(FlaskForm):
-	username = StringField("Username:", validators=[DataRequired()])
-	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
-	password_hash2 = PasswordField('Confirm Password:', validators=[DataRequired()])
-	type_of_jury = StringField("Type:", validators=[DataRequired()])
-	submit = SubmitField("Submit")
-
 class UserForm(FlaskForm):
-	username = StringField("Username:", validators=[DataRequired()])
-	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
-	password_hash2 = PasswordField('Confirm Password:', validators=[DataRequired()])
-	user_perms = IntegerField('User Permissions (1 or 2)', validators=[DataRequired()])
-	submit = SubmitField("Submit")
+    username = StringField("Username:", validators=[DataRequired()])
+    real_name= StringField("Real Name: ", validators=[DataRequired()])
+    password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
+    password_hash2 = PasswordField('Confirm Password:', validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
-class AthleteForm(FlaskForm):
-	username = StringField("Username:", validators=[DataRequired()])
-	password_hash = PasswordField('Password:', validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
-	password_hash2 = PasswordField('Confirm Password:', validators=[DataRequired()])
+
+class JudgeForm(UserForm):
+    type_of_jury = SelectField('Type of Jury', choices=[('normal', 'Normal'), ('major', 'Major')], default='normal')
+    category_name = StringField('Category Name')
+    tournament_id = IntegerField('ID do torneio')
+    submit = SubmitField('Submit')
+
+class AthleteForm(UserForm):
 	age = IntegerField('Age:', validators =[DataRequired()])
 	submit = SubmitField("Submit")
 
@@ -350,4 +286,7 @@ class LoginForm(FlaskForm):
 	password = PasswordField("Password", validators=[DataRequired()])
 	submit = SubmitField("Submit")
     
+class AdminForm(UserForm):
+    type_of_admin = SelectField('Type of Admin', choices = [('admin', 'Admin' , ('superadmin', 'Superadmin'))], default = 'admin')
+
 

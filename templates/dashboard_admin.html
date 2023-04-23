@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <a href="{{ url_for('get_users') }}"><h1>Users</h1></a>
+    <a href="{{ url_for('get_judges') }}"><h1>Judges</h1></a>
+    <a href="{{ url_for('get_tournaments') }}"><h1>Tournament</h1></a>
+    <a href="{{ url_for('get_category') }}"><h1>Category</h1></a>
+    {% if current_user.is_authenticated %}
+    {% if current_user.user_type == 'superadmin'%}
+    <a href="{{ url_for('admin') }}"><h1>Admin</h1></a>
+    {% endif %}
+    {% endif %}
+
+        
+
+{% endblock%}

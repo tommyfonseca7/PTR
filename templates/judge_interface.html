@@ -1,0 +1,56 @@
+{% extends 'base_without_headers.html' %}
+{% block title %}PTR - DashBoard{% endblock %}
+
+{% block content%}
+<header class="juri-header">
+    <img src="/static/images/logo.png" alt="" srcset="" class="middle-top-logo">
+</header>
+   
+
+<div class="title">
+    <h2>A avaliar: 🇵🇹 *Nome Competidor* - *Categoria*</h2>
+</div>
+
+<div class="compt">
+    <button class="button-reduce-tree" onclick="updateCompt('-0.3')">
+        <p>Retirar:</p>
+        <h1>-0.3</h1>
+    </button>
+    <button class="button-reduce-tree" onclick="updateCompt('+0.3')">
+        <p>Adicionar:</p>
+        <h1>+0.3</h1>
+    </button>
+    <div class="compt-text">
+        <p>Componente Técnica:</p>
+        <h1 id="compt-value">4.0</h1>
+    </div>
+    <button class="button-reduce-one" onclick="updateCompt('-0.1')">
+        <p>Retirar:</p>
+        <h1>-0.1</h1>
+    </button>
+    <button class="button-reduce-one" onclick="updateCompt('+0.1')">
+        <p>Adicionar:</p>
+        <h1>+0.1</h1>
+    </button>
+</div>
+
+
+<script>
+    function updateCompt(value) {
+        var comptValue = document.getElementById("compt-value");
+        var currentValue = parseFloat(comptValue.innerHTML);
+        var newValue = currentValue + parseFloat(value);
+        if (newValue > 4.0) {
+            newValue = 4.0;
+        }
+        if(newValue < 0){
+            newValue = 0;
+        }
+        comptValue.innerHTML = newValue.toFixed(1);
+    }
+
+</script>
+
+
+  
+{% endblock%}

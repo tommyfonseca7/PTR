@@ -14,8 +14,27 @@
         <a href="{{ url_for('index')}}">
             <img src="../static/images/logo.png" alt="" class="headerlogo-img">
         </a>
-        <a href="{{ url_for('login')}}"><h1>Login</h1></a>
+
+
+        {% if current_user.is_authenticated %}
         <a href=""><h1>Provas</h1></a>
+        <a href="{{ url_for('logout') }}"><h1>Logout</h1></a>
+        {%if current_user.user_type in ["admin", "superadmin"]%}
+        <a href="{{ url_for('dashboard')}}"><h1>Dashboard</h1></a>
+        {% endif %}
+        <h1 id = "real_name">{{current_user.real_name}}</h1>
+        {% else %}
+        <a href=""><h1>Provas</h1></a>
+        <a href="{{ url_for('login')}}"><h1>Login</h1></a>
+        <a href="{{ url_for('create_user')}}"><h1>Registo</h1></a>
+        {% endif %}
+
+
+
+
+
+
+
     </section>
     
 
