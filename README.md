@@ -2,12 +2,13 @@
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
 </p>
-##Pre requisitos
+
+## Pre requisitos
 
 <p>Como pré requisitos é necessário instalar o nosso ficheiro de requirements</p>
 <p>O comando para ele é pip install -r requirements.txt</p>
 
-##Como começar o website
+## Como começar o website
 
 <p>Primeiro é preciso criar a nossa database. Logo é necessário fazer python create_db.py</p>
 <p>De seguida, correr o python (Simplemente meter "Python" na consola) e quando se encontrar na mesma, fazer "from app import db"</p>
@@ -15,7 +16,7 @@
 
 <p>Para o correr é só necessário fazer flask run</p>
 
-##Melhorias a fazer no futuro
+## Melhorias a fazer no futuro
 
 <p>#1 - Alteração completa do css de maneira a que seja apelativo tudo a ver com o jogo</p>
 <p>#2 - Meter o projeto todo num docker</p>
