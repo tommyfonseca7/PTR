@@ -35,6 +35,8 @@ db = SQLAlchemy(app)
 app.app_context().push()
 migrate = Migrate(app, db)
 
+    
+    
 #Flask_Login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -44,21 +46,11 @@ from API.api import user_api
 app.register_blueprint(user_api)
 from models import Users,Category,Tournament,Judge,Athlete,Poomsae
 
-admin_user = Users(
-    username='admin',
-    real_name='Admin User',
-    password_hash='admin',
-    user_type='admin'
-)
 
-db.session.add(admin_user)
-db.session.commit()
 
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
-
-
 
 
 @app.route("/")
@@ -290,3 +282,13 @@ class AdminForm(UserForm):
     type_of_admin = SelectField('Type of Admin', choices = [('admin', 'Admin' , ('superadmin', 'Superadmin'))], default = 'admin')
 
 
+with app.app_context():
+    db.create_all()
+    admin_user = Users.query.filter_by(username='admin').first()
+    if not admin_user:
+        admin_user = Users(username='admin',
+        real_name='Admin User',
+        password_hash = generate_password_hash("admin", "sha256"),
+        user_type='admin')
+        db.session.add(admin_user)
+        db.session.commit()
