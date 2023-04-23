@@ -101,6 +101,7 @@ def admin():
     return render_template("admin.html")
 
 @app.route("/get_users", methods = ['GET'])
+@login_required
 def get_users():
     users = Users.query.all()
     return render_template('users_admin_page.html', users=users)
@@ -194,6 +195,7 @@ def create_judge():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
         user = Users.query.filter_by(username=form.username.data).first()
         category = Category.query.filter_by(name=form.category_name.data).first()
+        tournament = Tournament.query.filter_by(id = form.tournament_id.data).first()
         if user is None:
             user = Users(username=form.username.data, real_name=form.real_name.data, password_hash=hashed_pw, user_type= 'judge')
             db.session.add(user)
@@ -201,6 +203,10 @@ def create_judge():
         if category is None:
             category = Category(name=form.category_name.data)
             db.session.add(category)
+            db.session.commit()
+        if tournament is None:
+            tournament = Tournament(name = form.category_name.data + "tournament")
+            db.session.add(tournament)
             db.session.commit()
         
         judge = Judge(user=user, category_name=category.name, tournament_id=form.tournament_id.data, type_of_jury=form.type_of_jury.data)
@@ -213,7 +219,7 @@ def create_judge():
         db.session.add(user)
         db.session.add(judge)
         db.session.commit()
-        flash("wtf fufou")
+        flash("Created Sucessefully")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("create_judge.html", username=username, form=form, our_users=our_users)
 
@@ -290,5 +296,8 @@ with app.app_context():
         real_name='Admin User',
         password_hash = generate_password_hash("admin", "sha256"),
         user_type='admin')
+        tournament = Tournament(name = "tournament1")
+        db.session.add(tournament)
+        db.session.commit()
         db.session.add(admin_user)
         db.session.commit()

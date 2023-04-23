@@ -30,13 +30,6 @@
 {% endfor %}
 
 <br><br>
-<div class="fiy">
-    {% for our_user in our_users %}
-    <p>
-        {{ our_user.id }} - <a href="{{url_for('update_user', id=our_user.id)}}">{{ our_user.username }}</a>{{ our_user.real_name }}</a> - {{ our_user.password_hash }} - {{ our_user.date_added }} - User perms {{ our_user.user_type }} -  <a href="{{url_for('delete_user', id=our_user.id)}}">Delete</a>
-    </p>
-    {% endfor %}
-</div>
 
 
 

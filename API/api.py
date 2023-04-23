@@ -121,16 +121,16 @@ def get_tournaments():
         tournament.pop('_sa_instance_state')
     return jsonify(tournament_list)
 
-@user_api.route("/get_judges", methods=["GET"])
+@user_api.route("/api/get_judges", methods=["GET"])
 def get_judges():
-    judges = judges.query.all()
+    judges = Judge.query.all()
     judges_list = [judge.__dict__ for judge in judges]
     for judge in judges_list:
         judge.pop('_sa_instance_state')
     return jsonify(judges_list)
 
 
-@user_api.route("/get_category", methods=["GET"])
+@user_api.route("/api/get_category", methods=["GET"])
 def get_category():
     categorys = Category.query.all()
     category_list = [category.__dict__ for category in categorys]
