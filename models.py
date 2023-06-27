@@ -17,12 +17,14 @@ class Users(db.Model, UserMixin):
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
+    
 
 class Tournament(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    list_of_judges = db.relationship('Judge')
-    list_of_athletes = db.relationship('Athlete')
+    active = db.Column(db.Boolean, default= True)
+    list_of_judges = db.relationship('Judge', lazy='dynamic')
+    list_of_athletes = db.relationship('Athlete', lazy='dynamic')
 
 class Judge(db.Model):
     __tablename__ = 'judge'
@@ -35,12 +37,12 @@ class Judge(db.Model):
 
 class Athlete(db.Model, UserMixin):
     __tablename__ = 'athlete'
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, unique=True, primary_key=True)
-    user = db.relationship('Users', backref=db.backref('athlete', uselist=False))
-    category_type = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False, unique=True)
+    category_type = db.Column(db.String(200), nullable=False)
+    active = db.Column(db.Boolean, default= False)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=True)
     list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae')
-
     athlete_poomsae = db.Table('athlete_poomsae',
     db.Column('athlete_id', db.Integer, db.ForeignKey('athlete.id'), primary_key=True),
     db.Column('poomsae_id', db.Integer, db.ForeignKey('poomsae.id'), primary_key=True)
@@ -50,6 +52,10 @@ class Athlete(db.Model, UserMixin):
 class Poomsae(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
+    strength_and_velocity = db.Column(db.Integer)
+    rythm_and_coordenation = db.Column(db.Integer)
+    energy_expression = db.Column(db.Integer)
+    technical_component = db.Column(db.Integer)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 

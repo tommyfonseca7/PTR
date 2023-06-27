@@ -21,29 +21,67 @@ body{
     top: 0px;
     background: #00193A;
     display: flex;
-    align-items: center;
-    
+    align-items: center;  
 }
 
+.dropdown{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 10px ;
+}
+
+.stripe{
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+.dropdown-content{
+    display: none;
+    position: absolute;
+    background-color: #00193A;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 10px;
+}
+
+.dropdown-content > a {
+    text-decoration: none;
+    color: white;
+    position: relative;
+    margin: 50px;
+
+}
+
+.dropdown-content > a:active{
+    color: #7A0213 ;  
+}
+
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+  
+
 .headerlogo-img{
+    position: relative;
+    left: 43vw;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    display: block;
+    margin: 0 auto;
     width: 100px;
     height: 5vw;
     margin: 50px;
 }
 
-.header > a{
-    text-decoration: none;
-    color: white;
-    position: relative;
-    margin: 50px;
-}
 
-.header > a:nth-child(n + 2):active{
-    color: #7A0213 ;  
-}
+
+
 
 .welcome{
     display: flex;
@@ -155,8 +193,6 @@ footer{
 
 /* LOGIN */
 
-
-
 form {
     width: 300px;
     margin: 0 auto;
@@ -240,7 +276,7 @@ form {
 
   .juri-header{
     width: 100vw;
-    height: 100px;
+    height: 50px;
     left: 0px;
     top: 0px;
     text-align: center;
@@ -248,9 +284,22 @@ form {
   }
 
   .middle-top-logo{
+    width: 50px;
+    height: 50px;
+}
+
+.button-submit-juri{
     width: 100px;
-    height: 100px;
-  }
+    height: 50px;
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 
@@ -259,7 +308,29 @@ form {
     height: 100px;
     color: white;
     text-align: center;
-    padding: 20px;
+    padding-top: 20px;
+}
+
+.compt-cancel{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    padding-bottom: 10px;
+}
+
+.compt-cancel > button{
+    width: 100px;
+    height: 50px;
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 70px;
+    transition: background-color 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 
 .compt{
@@ -270,8 +341,8 @@ form {
 }
 
 .button-reduce-tree{
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
 
     color: white;
     background: #00193A;
@@ -281,9 +352,22 @@ form {
     transition: background-color 0.5s ease;
 }
 
+.button-reduce-tree > h1 {
+    font-size: 75px;
+}
+
+.compt-text > h1 {
+    font-size: 75px;
+}
+
+.button-reduce-one > h1 {
+    font-size: 75px;
+}
+
+
 .button-reduce-tree:hover{
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
 
     color: white;
     background: #034780;
@@ -297,8 +381,8 @@ form {
     flex-direction: column;
     text-align: center;
     justify-content: center;
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
 
     color: white;
     background: #00193A;
@@ -308,10 +392,8 @@ form {
 }
 
 .button-reduce-one{
-    width: 250px;
-    height: 250px;
-
-
+    width: 200px;
+    height: 200px;
     color: white;
     background: #00193A;
     border: 5px solid #FFFFFF;
@@ -321,10 +403,8 @@ form {
 }
 
 .button-reduce-one:hover{
-    width: 250px;
-    height: 250px;
-
-
+    width: 200px;
+    height: 200px;
     color: white;
     background: #034780;
     border: 5px solid #FFFFFF;
@@ -332,26 +412,479 @@ form {
     margin: 0 20px;
     transition: background-color 0.5s ease;
 }
+
+
+.apresentation-container {
+    display: flex;
+    color: white;
+    align-items: center;
+    margin-left: 12vw;
+    margin-top: 5vh;
+}
   
+  
+.apresentation-container > p {
+    font-size: xx-large;
+    padding-right: 20px;
+}
 
-#real_name{
+.slider-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+
+.tabs1{
+    display: flex;
+    position: relative;
+    background-color: #034780;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
+    padding: 0.5rem;
+    border-radius: 99px;
+}
+
+.tabs1 *{
+    z-index: 2;
+
+}
+
+.tabs2{
+    display: flex;
+    position: relative;
+    background-color: #034780;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
+    padding: 0.5rem;
+    border-radius: 99px;
+}
+
+.tabs2 *{
+    z-index: 2;
+
+}
+
+
+.tabs3{
+    display: flex;
+    position: relative;
+    background-color: #034780;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
+    padding: 0.5rem;
+    border-radius: 99px;
+}
+
+.tabs *{
+    z-index: 2;
+
+}
+
+
+input[type="radio"]{
+    display: none;
+}
+
+.tab{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 54px;
+    width: 100px;
+    font-size: 1.25rem;
+    font-weight: 400;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: color 0.15 ease-in;
+}
+
+input[type="radio"]:checked + label{
+    border: 2px solid white;
+}
+
+/* ADMIN PAGE */
+
+.admin-header {
+    width: 100vw;
+    height: 5vw;
+    background-color: #00193A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tournament-page-title{
+    color: white;
+    font-size: 20px;
+}
+
+.container-tournament-options{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.container-tournament-options > input {
+    width: 350px;
+    margin: 0 20px;
+}
+
+.container-tournament-options > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 20px;
+}
+
+.container-tournament-options > select {
+    width: 200px;
+    margin: 0 20px;
+}
+
+.container-category-options{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.container-category-options > input {
+    width: 350px;
+    margin: 0 20px;
+}
+
+.container-category-options > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 20px;
+}
+
+.container-category-options > select {
+    width: 200px;
+    margin: 0 20px;
+}
+
+.container-athelete-options{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.container-athelete-options > input {
+    width: 350px;
+    margin: 0 20px;
+}
+
+.container-athelete-options > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 20px;
+}
+
+.container-athelete-options > select {
+    width: 200px;
+    margin: 0 20px;
+}
+
+.container-judge-options{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.container-judge-options > input {
+    width: 350px;
+    margin: 0 20px;
+}
+
+.container-judge-options > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 20px;
+}
+
+.container-judge-options > select {
+    width: 200px;
+    margin: 0 20px;
+}
+
+
+/* PROVAS */
+
+.provas-container{
+    display: flex;
+    color: white;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.provas-container a {
+    text-decoration: none;
+}
+.prova{
+    padding: 20px;
+    margin: 5px 0;
+    border: 5px solid #50504f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-prova {
+    color: white;
+}
+
+.prova > h3 {
+    text-decoration: none;
+    color: white;
+}
+
+.arrow {
     float: right;
-    margin-left: 56%;
+    font-size: 24px;
+    text-decoration: none;
+    color: white;
 }
 
-#update_user{
-    align-self: center;
+/* PROVA */
+
+.categorias-container{
+    display: flex;
+    color: white;
+    flex-direction: column;
+    margin: 20px;
 }
 
-#user-table{
-    border-collapse: collapse;
-    width: 40%;
-    margin-top: 20px;
+.categorias-container a {
+    text-decoration: none;
 }
 
-th,
-td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.categoria {
+    padding: 20px;
+    margin: 10px 0;
+    border: 5px solid #50504f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
 }
+
+
+.admin-header {
+    width: 100vw;
+    height: 5vw;
+    background-color: #00193A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tournament-page-title{
+    color: white;
+    font-size: 20px;
+}
+
+.container-new-torneio{
+    padding: 3vw 0;
+    display: flex;
+    justify-content: center;
+}
+
+.container-new-torneio > button {
+    width: 200px;
+    height: 100px;
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+}
+
+.container-new-torneio > button:hover {
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+}
+
+.torneios-container {
+    display: flex;
+    color: white;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.torneios-container a {
+    text-decoration: none;
+}
+
+.torneio { 
+    padding: 20px;
+    margin: 5px 0;
+    border: 5px solid #50504f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+.torneio > button {
+    width: 100px;
+    height: 50px;
+    color: white;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.torneio > button:hover {
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+}
+.container-new-torneio > a {
+    text-decoration : none;
+}
+/* categoria_id */
+
+.athletes-and-judges-container {
+    display: flex;
+  }
+  
+  .atletas-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .atleta {
+    display: flex;
+    align-items: center;
+    margin: 2vh 0;
+  }
+  
+  .atleta a,
+  .atleta button,
+  .atleta h2 {
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+  }
+
+  .atleta button{
+    width: 100px;
+    height: 75px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+  }
+
+  .atleta button:hover{
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+  }
+  
+  .judge-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin: 0 2vw;
+    flex-direction: column;
+  }
+
+  .judge{
+    display: flex;
+    align-items: center;
+    margin: 2vh 0;
+  }
+
+  .judge a,
+  .judge button,
+  .judge h2 {
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+  }
+
+  .judge button{
+    width: 100px;
+    height: 75px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00193A;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    margin: 0 20px;
+    transition: background-color 0.5s ease;
+  }
+
+  .judge button:hover{
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+  }
+
+  .add-btns-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2vh 0;
+  }
+
+  .add-btns-container > a{
+    text-decoration: none;
+    color: white;
+    font-size: x-large;
+    margin: 0 5vw;
+    cursor: pointer;
+    padding: 20px;
+    border: 5px solid #FFFFFF;
+    background: #00193A;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+  }
+
+  .add-btns-container > a:hover{
+    background: #034780;
+    border: 5px solid #FFFFFF;
+    border-radius: 25px;
+    transition: background-color 0.5s ease;
+  }
+
+  .torneio > a {
+    text-decoration: none;
+    color:white;
+  }
