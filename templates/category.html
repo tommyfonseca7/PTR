@@ -1,0 +1,30 @@
+{% extends 'base_without_headers.html' %}
+{% block title %}PTR - DashBoard{% endblock %}
+
+
+{% block content%}
+<header class="admin-header">
+    <img src="/static/images/logo.png" alt="" srcset="" class="middle-top-logo">
+     <a href = "{{ url_for('index')}}"<h1 class="tournament-page-title">Categorias do torneio</h1></a>
+</header>
+
+<div class="container-new-torneio">
+    {%if current_user.user_type in ["admin", "superadmin"]%}
+    <button class="new-torneio-btn"><a href = {{ url_for('create_category') }}>Adicionar Categoria</a></button>
+    {% endif %}
+</div>
+
+<div class="torneios-container">
+    {% for categories in categories %}
+        <div class="torneio">
+            <a href = {{ url_for('tournament_category') }} ><h1 class="title-torneio">{{categories.name}}</h1></a>
+            {%if current_user.user_type in ["admin", "superadmin"]%}
+            <button >Delete</button>
+            {% endif %}
+            <h2 class="arrow">></h2>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock%}

@@ -106,20 +106,30 @@ def get_users():
     users = Users.query.all()
     return render_template('users_admin_page.html', users=users)
 
+@app.route("/provas" , methods = ['GET'])
+def provas():
+    tournaments = Tournament.query.all()
+    category = Category.query.all()
+    return render_template('provas.html', tournaments=tournaments, category=category)
+
+
 @app.route("/get_judges", methods = ['GET'])
+@login_required
 def get_judges():
     judges = Judge.query.all()
-    return render_template('users_admin_page.html', judges=judges)
+    return render_template('judges_admin_page.html', judges=judges)
 
 @app.route("/get_tournaments", methods = ['GET'])
+@login_required
 def get_tournaments():
     tournaments = Tournament.query.all()
-    return render_template('users_admin_page.html', tournaments=tournaments)
+    return render_template('tournaments_admin_page.html', tournaments=tournaments)
 
 @app.route("/get_category", methods = ['GET'])
+@login_required
 def get_category():
     category = Category.query.all()
-    return render_template('users_admin_page.html', category=category)
+    return render_template('category_admin_page.html', category=category)
 
 @app.route("/create_user", methods = ['GET', 'POST'])
 def create_user():
@@ -140,6 +150,58 @@ def create_user():
         flash("Registado com sucesso!")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("create_user.html", username=username, form=form, our_users=our_users)
+
+@app.route('/create_category', methods=['GET', 'POST'])
+def create_category():
+    form = CategoryForm()
+
+    if form.validate_on_submit():
+        name = form.name.data
+
+        if Category.query.filter_by(name=name).first():
+            return 'Category already exists'
+
+        category = Category(name=name)
+        db.session.add(category)
+        db.session.commit()
+
+        return 'Category created successfully'
+
+    return render_template('create_category.html', form=form)
+
+@app.route('/update_category/<int:id>', methods=['GET', 'POST'])
+def update_category(id):
+    category = Category.query.get_or_404(id)
+    form = CategoryForm(obj=category)
+
+    if form.validate_on_submit():
+        category.name = form.name.data
+        db.session.commit()
+        return redirect(url_for('list_categories'))
+
+    return render_template('update_category.html', form=form)
+
+@app.route('/delete_category/<int:id>', methods=['GET', 'POST'])
+def delete_category(id):
+    category = Category.query.get_or_404(id)
+
+    if request.method == 'POST':
+        db.session.delete(category)
+        db.session.commit()
+        return redirect(url_for('list_categories'))
+
+    return render_template('delete_category.html', category=category)
+
+@app.route('/category')
+def list_categories():
+    categories = Category.query.all()
+    return render_template('category.html', categories=categories)
+
+@app.route('/certain_category')
+def tournament_category():
+    athletes = Athlete.query.all()
+    judges = Judge.query.all()
+    return render_template('tournament_category.html', athletes=athletes, judges=judges)
 
 @app.route("/update_user/<int:id>", methods = ['GET', 'POST'])
 def update_user(id):
@@ -174,18 +236,70 @@ def delete_user(id):
         db.session.delete(user_to_delete)
         db.session.commit()
         flash("User deleted sucessfully!")
-        our_users = Users.query.order_by(Users.date_added)
         return redirect(url_for('create_user'))
     except: 
         flash("There was a prbolem deleting user, try again!")
         return redirect(url_for('get_users'))
 
-@app.route('/juri_interface', methods = ['GET'])
+
+active_athlete = None
+@app.route('/juri_interface', methods = ['GET','POST'])
 @login_required
 def judgeInterface():
+    global active_athlete
     if current_user.user_type not in ['admin', 'judge','superadmin']:
         abort(403)
-    return render_template("juriInterface.html")
+        
+    active_tournament = None
+    for tournament in Tournament.query.all():
+        if tournament.active:
+            active_tournament = tournament
+            break
+    if active_tournament is None:
+        return render_template("notournament.html")
+
+        
+    active_athlete = Athlete.query.filter_by(active=True).first()
+    if active_athlete == None:
+        return render_template("notournament.html")
+    if active_athlete.active == False:
+        return render_template("notournament.html")
+
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        strength_and_velocity = data.get('strength_and_velocity')
+        rythm_and_coordenation = data.get('rhythm_and_coordination')
+        energy_expression = data.get('energy_expression')
+        technical_component = data.get('technical_component')
+        athlete = data.get('name')
+        tournament_id = data.get('tournament_id')
+        results = Poomsae(
+        name = athlete,
+        tournament_id = tournament_id,
+        strength_and_velocity=strength_and_velocity,
+        rythm_and_coordenation=rythm_and_coordenation,
+        energy_expression=energy_expression,
+        technical_component=technical_component
+    )
+    
+        db.session.add(results)
+        active_athlete.list_of_poomsaes.append(results)
+        db.session.commit()
+        next_active_athlete = Athlete.query.filter(Athlete.id > active_athlete.id).first()
+
+        if next_active_athlete != None:
+                # Set the next athlete as active
+                active_athlete.active = False
+                next_active_athlete.active = True
+                db.session.commit()
+                return redirect(url_for('judgeInterface'))
+        active_athlete.active = False
+        print(active_athlete.active)
+        db.session.commit()
+        
+    
+    return render_template("judge_interface.html", active_athlete=active_athlete, tournament=active_tournament)
 
 @app.route('/create_judge' , methods=['GET', 'POST'])
 def create_judge():
@@ -286,6 +400,10 @@ class LoginForm(FlaskForm):
     
 class AdminForm(UserForm):
     type_of_admin = SelectField('Type of Admin', choices = [('admin', 'Admin' , ('superadmin', 'Superadmin'))], default = 'admin')
+    
+class CategoryForm(FlaskForm):
+    name = StringField('Category Name', validators=[DataRequired()])
+    submit = SubmitField('Create Category')
 
 
 with app.app_context():

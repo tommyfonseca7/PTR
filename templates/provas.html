@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for category in category %}
+{% for tournaments in tournaments %}
+<tr>
+  <h1><td>{{ category.name }}</td></h1>
+    <td>Torneio a decorrer {{tournaments.name}}</td>
+</tr>
+{% endfor %}
+{% endfor %}
+{% endblock%}
