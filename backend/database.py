@@ -1,4 +1,4 @@
-from backend.create_app import db
+from backend.models import db
 
 
 

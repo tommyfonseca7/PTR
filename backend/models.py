@@ -1,10 +1,13 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from backend.create_app import db
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from backend.init import create_app
 
-
-
+app = create_app()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -74,3 +77,10 @@ class Poomsae(db.Model, UserMixin):
 
     def __repr__(self):
         return '<NAME %r>' % self.username
+    
+    
+    
+with app.app_context():
+    db.create_all()
+
+

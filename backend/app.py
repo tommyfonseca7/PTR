@@ -4,12 +4,11 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user
 from flask_wtf import FlaskForm
-from backend.create_app import app
-from backend.database import *
+from backend.database import add_instance,delete_instance,commit_changes
 from flask_sqlalchemy import SQLAlchemy
-from backend.init import create_app
 from wtforms import StringField, SubmitField, PasswordField, IntegerField, SelectField
 from wtforms.validators import DataRequired, EqualTo, InputRequired
+from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae,app
 
 
 
@@ -22,7 +21,7 @@ login_manager.login_view = 'login'
 
 from backend.API.api import user_api
 app.register_blueprint(user_api)
-from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae
+
 
 
 
