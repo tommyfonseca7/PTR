@@ -1,9 +1,13 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from backend.init import create_app
 
-from app import db
-
+app = create_app()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -28,10 +32,10 @@ class Tournament(db.Model, UserMixin):
 
 class Judge(db.Model):
     __tablename__ = 'judge'
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, unique=True, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, primary_key=True)
     user = db.relationship('Users', backref=db.backref('judge', uselist=False))
-    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=True)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=True)
+    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), unique=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
     type_of_jury = db.Column(db.Enum('major', 'normal', default = 'normal'))
 
 
@@ -73,3 +77,10 @@ class Poomsae(db.Model, UserMixin):
 
     def __repr__(self):
         return '<NAME %r>' % self.username
+    
+    
+    
+with app.app_context():
+    db.create_all()
+
+

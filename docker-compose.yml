@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  flask-app:
+    container_name: flask-app
+    build: backend
+    restart: always
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend:/backend
+      - ./backend/templates:/templates
+      - ./static:/static
+    depends_on:
+      - mysql-db
+
+  mysql-db:
+    container_name: mysql-db
+    image: mysql:8.0.33
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: my_user
+      MYSQL_DATABASE: ptr
+    volumes:
+      - ./database:/var/lib/mysql
+
+volumes:
+  mysql-db:

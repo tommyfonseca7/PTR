@@ -1,39 +1,16 @@
 from enum import Enum
 from os import abort
 from flask import Flask, render_template, request, flash, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from datetime import datetime
-import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user
 from flask_wtf import FlaskForm
+from backend.database import add_instance,delete_instance,commit_changes
+from flask_sqlalchemy import SQLAlchemy
 from wtforms import StringField, SubmitField, PasswordField, IntegerField, SelectField
 from wtforms.validators import DataRequired, EqualTo, InputRequired
+from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae,app
 
 
-
-
-
-
-#Flask Instance
-app = Flask(__name__)
-
-secret_key = secrets.token_hex(32)
-#Add Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost/ptr'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = secret_key
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
-app.config['MYSQL_DB'] = 'MyDB'
-
-
-#Initialize Database
-db = SQLAlchemy(app)
-app.app_context().push()
-migrate = Migrate(app, db)
 
     
     
@@ -42,9 +19,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-from API.api import user_api
+from backend.API.api import user_api
 app.register_blueprint(user_api)
-from models import Users,Category,Tournament,Judge,Athlete,Poomsae
+
 
 
 
@@ -140,8 +117,7 @@ def create_user():
         user = Users.query.filter_by(username=form.username.data).first()
         if user is None:
             user = Users(username = form.username.data, real_name = form.real_name.data, password_hash = hashed_pw, user_type = 'user')
-            db.session.add(user)
-            db.session.commit()
+            add_instance(Users,username = form.username.data, real_name = form.real_name.data, password_hash = hashed_pw, user_type = 'user')
         username = form.username.data
         form.username.data = ''
         form.real_name.data = ''
@@ -162,8 +138,7 @@ def create_category():
             return 'Category already exists'
 
         category = Category(name=name)
-        db.session.add(category)
-        db.session.commit()
+        add_instance(category)
 
         return 'Category created successfully'
 
@@ -176,7 +151,7 @@ def update_category(id):
 
     if form.validate_on_submit():
         category.name = form.name.data
-        db.session.commit()
+        commit_changes()
         return redirect(url_for('list_categories'))
 
     return render_template('update_category.html', form=form)
@@ -186,8 +161,7 @@ def delete_category(id):
     category = Category.query.get_or_404(id)
 
     if request.method == 'POST':
-        db.session.delete(category)
-        db.session.commit()
+        delete_instance(category)
         return redirect(url_for('list_categories'))
 
     return render_template('delete_category.html', category=category)
@@ -202,6 +176,9 @@ def tournament_category():
     athletes = Athlete.query.all()
     judges = Judge.query.all()
     return render_template('tournament_category.html', athletes=athletes, judges=judges)
+
+
+
 
 @app.route("/update_user/<int:id>", methods = ['GET', 'POST'])
 def update_user(id):
@@ -220,7 +197,7 @@ def update_user(id):
         user_to_update.password_hash2 = generate_password_hash(user_to_update.password_hash,"sha256") 
         try:
             
-            db.session.commit()
+            commit_changes()
             flash("User Updated sucessfully")
             return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
         except:
@@ -233,8 +210,7 @@ def update_user(id):
 def delete_user(id):
     user_to_delete = Users.query.get_or_404(id)
     try:
-        db.session.delete(user_to_delete)
-        db.session.commit()
+        delete_instance(user_to_delete)
         flash("User deleted sucessfully!")
         return redirect(url_for('create_user'))
     except: 
@@ -283,20 +259,20 @@ def judgeInterface():
         technical_component=technical_component
     )
     
-        db.session.add(results)
+        add_instance(results)
         active_athlete.list_of_poomsaes.append(results)
-        db.session.commit()
+        commit_changes()
         next_active_athlete = Athlete.query.filter(Athlete.id > active_athlete.id).first()
 
         if next_active_athlete != None:
                 # Set the next athlete as active
                 active_athlete.active = False
                 next_active_athlete.active = True
-                db.session.commit()
+                commit_changes()
                 return redirect(url_for('judgeInterface'))
         active_athlete.active = False
         print(active_athlete.active)
-        db.session.commit()
+        commit_changes()
         
     
     return render_template("judge_interface.html", active_athlete=active_athlete, tournament=active_tournament)
@@ -312,16 +288,13 @@ def create_judge():
         tournament = Tournament.query.filter_by(id = form.tournament_id.data).first()
         if user is None:
             user = Users(username=form.username.data, real_name=form.real_name.data, password_hash=hashed_pw, user_type= 'judge')
-            db.session.add(user)
-            db.session.commit()
+            add_instance(user)
         if category is None:
             category = Category(name=form.category_name.data)
-            db.session.add(category)
-            db.session.commit()
+            add_instance(category)
         if tournament is None:
             tournament = Tournament(name = form.category_name.data + "tournament")
-            db.session.add(tournament)
-            db.session.commit()
+            add_instance(tournament)
         
         judge = Judge(user=user, category_name=category.name, tournament_id=form.tournament_id.data, type_of_jury=form.type_of_jury.data)
         username = form.username.data
@@ -330,9 +303,7 @@ def create_judge():
         form.password_hash.data = ''
         form.password_hash2.data = ''
 
-        db.session.add(user)
-        db.session.add(judge)
-        db.session.commit()
+        add_instance(user,judge)
         flash("Created Sucessefully")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("create_judge.html", username=username, form=form, our_users=our_users)
@@ -350,8 +321,7 @@ def create_admin():
         if user is None:
             form.user_type.data = form.type_of_admin
             user = Users(username = form.username.data, password_hash = hashed_pw, user_type = form.user_type.data)
-            db.session.add(user)
-            db.session.commit()
+            add_instance(user)
         username = form.username.data
         form.real_name.data = ''
         form.password_hash.data = ''
@@ -405,17 +375,3 @@ class CategoryForm(FlaskForm):
     name = StringField('Category Name', validators=[DataRequired()])
     submit = SubmitField('Create Category')
 
-
-with app.app_context():
-    db.create_all()
-    admin_user = Users.query.filter_by(username='admin').first()
-    if not admin_user:
-        admin_user = Users(username='admin',
-        real_name='Admin User',
-        password_hash = generate_password_hash("admin", "sha256"),
-        user_type='admin')
-        tournament = Tournament(name = "tournament1")
-        db.session.add(tournament)
-        db.session.commit()
-        db.session.add(admin_user)
-        db.session.commit()
