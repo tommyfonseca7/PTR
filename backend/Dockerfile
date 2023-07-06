@@ -1,6 +1,14 @@
-FROM python:latest
-COPY . /backend
+FROM python:latest AS builder
 WORKDIR /backend
-RUN pip install -r requirements.txt
-ENTRYPOINT ["flask"]
-CMD ["run"]
+COPY requirements.txt .
+RUN pip install --user -r requirements.txt
+
+FROM python:latest
+EXPOSE 5000
+COPY --from=builder /root/.local /root/.local
+COPY . /backend
+COPY templates /backend/
+WORKDIR /backend
+ENV PYTHONPATH=/backend
+ENV PATH=/root/.local/bin:$PATH
+CMD flask run --host=0.0.0.0

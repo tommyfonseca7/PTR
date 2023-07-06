@@ -29,10 +29,10 @@ class Tournament(db.Model, UserMixin):
 
 class Judge(db.Model):
     __tablename__ = 'judge'
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, unique=True, primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, primary_key=True)
     user = db.relationship('Users', backref=db.backref('judge', uselist=False))
-    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), nullable=True)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=True)
+    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), unique=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
     type_of_jury = db.Column(db.Enum('major', 'normal', default = 'normal'))
 
 

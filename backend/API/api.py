@@ -1,15 +1,17 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from flask import Blueprint
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from app import db
-from models import Users, Judge, Category, Tournament, Athlete, Poomsae
+from backend.models import db
+from backend.models import Users, Judge, Category, Tournament, Athlete, Poomsae
 
 
 
 
 
 user_api = Blueprint('routes_user_api', __name__)
+
 
 
 @user_api.route('/api/create_category', methods=['POST'])

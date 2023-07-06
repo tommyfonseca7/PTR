@@ -13,8 +13,6 @@ from wtforms.validators import DataRequired, EqualTo, InputRequired
 
 
 
-
-
     
     
 #Flask_Login
@@ -22,7 +20,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-from API.api import user_api
+from backend.API.api import user_api
 app.register_blueprint(user_api)
 from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae
 
