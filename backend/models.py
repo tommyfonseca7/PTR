@@ -21,12 +21,15 @@ class Users(db.Model, UserMixin):
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
     
 
 class Tournament(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     active = db.Column(db.Boolean, default= True)
+    # date = db.Column(db.DateTime, nullable = False)
+    list_of_categories = db.relationship('Category', lazy='dynamic')
     list_of_judges = db.relationship('Judge', lazy='dynamic')
     list_of_athletes = db.relationship('Athlete', lazy='dynamic')
 
@@ -82,5 +85,13 @@ class Poomsae(db.Model, UserMixin):
     
 with app.app_context():
     db.create_all()
-
-
+    admin_user = Users.query.filter_by(username='admin').first()
+    if not admin_user:
+        admin_user = Users(username='admin',
+        real_name='Admin User',
+        password_hash = generate_password_hash("admin", "sha256"),
+        user_type='admin')
+        tournament = Tournament(name = "tournament1")
+        db.session.add(admin_user)
+        db.session.add(tournament)
+        db.session.commit()

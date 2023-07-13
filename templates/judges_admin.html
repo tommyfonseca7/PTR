@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/styleadmindash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
+<body class="admin-body">
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="">
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('admin') }}" >
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="{{ url_for('tounaments_admin') }}">
+                    <span class="material-symbols-sharp">diversity_2</span>
+                    <h3>Torneios</h3>
+                </a>
+
+                <a href="{{ url_for('categories_admin') }}">
+                    <span class="material-symbols-sharp">category</span>
+                    <h3>Categorias</h3>
+                </a>
+
+                <a href="{{ url_for('athletes_admin') }}">
+                    <span class="material-symbols-sharp">sports_martial_arts</span>
+                    <h3>Competidores</h3>
+                </a>
+
+                <a href="{{ url_for('judges_admin') }}" class="active">
+                    <span class="material-symbols-sharp">gavel</span>
+                    <h3>Arbitros</h3>
+                </a>
+
+                <a href="{{ url_for('users_admin') }}">
+                    <span class="material-symbols-sharp">person</span>
+                    <h3>Utilizadores</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            
+        </aside>
+
+        <main>
+            <div class="categoria-container">
+                <h1>Categoria DAN SUB-30 M</h1>
+                <a href="" class="edit">
+                    <span class="material-symbols-sharp">edit</span>
+                </a>
+            </div>
+            <h2>Competidores</h2>
+            <div class="competidores">
+                <div class="competidor-item">
+                    <h3>Nome do Atleta</h3>
+                    <h5>DAN SUB-30 M</h3>
+                    <small class="text-muted">Nome do Torneio</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="competidor-item">
+                    <h3>Nome do Atleta</h3>
+                    <h5>DAN SUB-30 M</h3>
+                    <small class="text-muted">Nome do Torneio</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="competidor-item">
+                    <h3>Nome do Atleta</h3>
+                    <h5>DAN SUB-30 M</h3>
+                    <small class="text-muted">Nome do Torneio</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="competidor-item">
+                    <h3>Nome do Atleta</h3>
+                    <h5>DAN SUB-30 M</h3>
+                    <small class="text-muted">Nome do Torneio</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="competidor-item">
+                    <h3>Nome do Atleta</h3>
+                    <h5>DAN SUB-30 M</h3>
+                    <small class="text-muted">Nome do Torneio</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="competidor-item add-competidor">
+                    <a href="">
+                        <span class="material-symbols-sharp">add</span>
+                        <h4>Adicionar Atleta</h4>
+                    </a>
+                </div>
+            </div>
+        
+        </main>
+
+    </div>
+    
+
+    <script src="../static/scripts/script.js"></script>
+    </body>
+    </html>

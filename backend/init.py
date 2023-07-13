@@ -17,6 +17,6 @@ def create_app():
     app.config['MYSQL_DB'] = 'ptr'
     
     if __name__ == "__main__":
-        app.run(host='0.0.0.0')
+        app.run(host='0.0.0.0', debug = True)
     return app
 

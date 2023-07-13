@@ -158,3 +158,23 @@ document.getElementById("button-submit-juri").addEventListener('click', function
     // Handle any network or server errors
 });
 });
+
+function show_hide(divId) {
+  var click = document.getElementById(divId);
+  if (click.style.display === "none") {
+      click.style.display = "grid";
+  } else {
+      click.style.display = "none";
+  }
+}
+
+
+function show_popup(divId) {
+  var click = document.getElementById(divId);
+  click.style.display = "flex";
+}
+
+function hide_popup(divId) {
+  var click = document.getElementById(divId);
+  click.style.display = "none";
+}

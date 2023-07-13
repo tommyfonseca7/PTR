@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/styleadmindash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
+<body class="admin-body">
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="">
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('admin') }}" >
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="{{ url_for('tounaments_admin') }}">
+                    <span class="material-symbols-sharp">diversity_2</span>
+                    <h3>Torneios</h3>
+                </a>
+
+                <a href="{{ url_for('categories_admin') }}" class="active">
+                    <span class="material-symbols-sharp">category</span>
+                    <h3>Categorias</h3>
+                </a>
+
+                <a href="{{ url_for('athletes_admin') }}">
+                    <span class="material-symbols-sharp">sports_martial_arts</span>
+                    <h3>Competidores</h3>
+                </a>
+
+                <a href="{{ url_for('judges_admin') }}">
+                    <span class="material-symbols-sharp">gavel</span>
+                    <h3>Arbitros</h3>
+                </a>
+
+                <a href="{{ url_for('users_admin') }}">
+                    <span class="material-symbols-sharp">person</span>
+                    <h3>Utilizadores</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            
+        </aside>
+
+        <main>
+            <h1>Categorias</h1>
+
+            {% for tournament in tournament %}
+            <div class="torneios-categorias">
+                <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
+                    <h3>{{ tournament.name }}</h3>
+                    <span class="material-symbols-sharp">expand_more</span>
+                </button>
+               
+                
+                <div class="categorias" id="{{ tournament.name }}">
+                    {% for category in tournament.list_of_categories %}
+                    <div class="categoria-item">
+                        <h3>{{ category.name }}</h3>
+                        <small class="text-muted">{{ category.list_of_athletes|length }}</small>
+                        <div class="options">
+                            <a href="" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                            <a href="" class="edit">
+                                <span class="material-symbols-sharp">edit</span>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="categoria-item add-categoria">
+                        <a onclick="show_popup('bg-popup-category')">
+                            <span class="material-symbols-sharp">add</span>
+                            <h4>Adicionar Categoria</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="torneios-categorias">
+                <button onclick="show_hide('list-items1')" class="btn-categorias">
+                    <h3>Nome do Torneio</h3>
+                    <span class="material-symbols-sharp">expand_more</span>
+                </button>
+               
+                <div class="categorias" id="list-items1">
+                    <div class="categoria-item">
+                        <h3>DAN SUB-30 M</h3>
+                        <small class="text-muted">20 Atletas</small>
+                        <div class="options">
+                            <a href="" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                            <a href="" class="edit">
+                                <span class="material-symbols-sharp">edit</span>
+                            </a>
+                        </div>
+                    </div>
+        
+                    <div class="categoria-item">
+                        <h3>DAN SUB-30 M</h3>
+                        <small class="text-muted">20 Atletas</small>
+                        <div class="options">
+                            <a href="" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                            <a href="" class="edit">
+                                <span class="material-symbols-sharp">edit</span>
+                            </a>
+                        </div>
+                    </div>
+        
+                    <div class="categoria-item add-categoria">
+                        <a onclick="show_popup('bg-popup-category')">
+                            <span class="material-symbols-sharp">add</span>
+                            <h4>Adicionar Categoria</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="torneios-categorias">
+                <button onclick="show_hide('list-items2')" class="btn-categorias">
+                    <h3>Nome do Torneio</h3>
+                    <span class="material-symbols-sharp">expand_more</span>
+                </button>
+               
+                <div class="categorias" id="list-items2">
+                    <div class="categoria-item">
+                        <h3>DAN SUB-30 M</h3>
+                        <small class="text-muted">20 Atletas</small>
+                        <div class="options">
+                            <a href="" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                            <a href="" class="edit">
+                                <span class="material-symbols-sharp">edit</span>
+                            </a>
+                        </div>
+                    </div>
+        
+                    <div class="categoria-item add-categoria">
+                        <a href="">
+                            <span class="material-symbols-sharp">add</span>
+                            <h4>Adicionar Categoria</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-popup" id="bg-popup-category">
+                <div class="add-category-popup">
+                    <h2>Adicionar Categoira</h2>
+                    <a onclick="hide_popup('bg-popup-category')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                    
+                        {{ form.name.label }}
+                        {{ form.name() }}
+                        <br>
+                        <br><br>
+                        {{ form.submit() }}
+                    </form>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+    <script src="../static/scripts/script.js"></script>
+    </body>
+    </html>
