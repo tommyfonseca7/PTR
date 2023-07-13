@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/styleadmindash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
+<body class="admin-body">
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="">
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('admin') }}" >
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="{{ url_for('tounaments_admin') }}" class="active">
+                    <span class="material-symbols-sharp">diversity_2</span>
+                    <h3>Torneios</h3>
+                </a>
+
+                <a href="{{ url_for('categories_admin') }}">
+                    <span class="material-symbols-sharp">category</span>
+                    <h3>Categorias</h3>
+                </a>
+
+                <a href="{{ url_for('athletes_admin') }}">
+                    <span class="material-symbols-sharp">sports_martial_arts</span>
+                    <h3>Competidores</h3>
+                </a>
+
+                <a href="{{ url_for('judges_admin') }}">
+                    <span class="material-symbols-sharp">gavel</span>
+                    <h3>Arbitros</h3>
+                </a>
+
+                <a href="{{ url_for('users_admin') }}">
+                    <span class="material-symbols-sharp">person</span>
+                    <h3>Utilizadores</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            
+        </aside>
+
+        <main>
+            <h1>Torneios</h1>
+            
+            <div class="torneios">
+
+                {% for tournament in tournament %}
+                <div class="torneio-item">
+                    <h3>{{ tournament.name }}</h3>
+                    <small class="text-muted">08/07/2023</small>
+                    <h5>{{ tournament.list_of_categories|length }} Categorias</h3>
+                    <div class="options">
+                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="torneio-item">
+                    <h3>Nome do Torneio</h3>
+                    <small class="text-muted">08/07/2023</small>
+                    <h5>7 Categorias</h3>
+                    <div class="options">
+                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="torneio-item">
+                    <h3>Nome do Torneio</h3>
+                    <small class="text-muted">08/07/2023</small>
+                    <h5>7 Categorias</h3>
+                    <div class="options">
+                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="torneio-item">
+                    <h3>Nome do Torneio</h3>
+                    <small class="text-muted">08/07/2023</small>
+                    <h5>7 Categorias</h3>
+                    <div class="options">
+                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="torneio-item">
+                    <h3>Nome do Torneio</h3>
+                    <small class="text-muted">08/07/2023</small>
+                    <h5>7 Categorias</h3>
+                    <div class="options">
+                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="torneio-item add-torneio" onclick="show_popup('bg-torneio-add')">
+                    <a id="add-torneio-btn">
+                        <span class="material-symbols-sharp">add</span>
+                        <h4>Adicionar Torneio</h4> 
+                    </a>          
+                </div>
+            </div>
+            
+            <div class="bg-popup" id="bg-torneio-add">
+                <div class="add-torneio-poppup" id="add-torneio">
+                    <a id="close-btn-torneio" onclick="hide_popup('bg-torneio-add')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <h2>Adicionar Torneio</h2>
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                    
+                        {{ form.name.label }}
+                        {{ form.name() }}
+                        <br>
+                        <br><br>
+                        {{ form.submit() }}
+                    </form>
+                </div>
+            </div>
+
+            <div class="bg-popup" id="bg-torneio-delete">
+                <div class="delete-torneio-popup">
+                    <a onclick="hide_popup('bg-torneio-delete')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <h2>Tem a certeza que quer apagar o torneio?</h2>
+                    <div class="btns">
+                        <button>Sim</button>
+                        <button>Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            
+        </main>
+
+    </div>
+
+<script src="../static/scripts/script.js"></script>
+</body>
+</html>

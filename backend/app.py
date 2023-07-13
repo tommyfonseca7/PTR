@@ -63,19 +63,99 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("/admin_dashboard", methods = ['GET', 'POST'])
+@app.route("/admin", methods = ['GET', 'POST'])
 @login_required
-def dashboard():
+def admin():
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard_admin.html")
+        return render_template("dashboard.html")
     else:
         flash("You are not an admin!")
         return render_template("index.html")
 
-@app.route("/admin")
+@app.route("/admin/tournaments", methods = ['GET', 'POST'])
 @login_required
-def admin():
-    return render_template("admin.html")
+def tounaments_admin():
+    form = TournamentForm()
+    tournaments = Tournament.query.all()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        if Tournament.query.filter_by(name=name).first():
+            return 'Tournament already exists'
+
+        tournament = Tournament(name=name)
+        add_instance(tournament)
+
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("tournaments_admin.html", form=form, tournaments = tournaments)
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
+    
+@app.route("/admin/categories", methods = ['GET', 'POST'])
+@login_required
+def categories_admin():
+    form = CategoryForm()
+    tournaments = Tournament.query.all()
+
+
+    if form.validate_on_submit():
+        name = form.name.data
+        if CategoryForm.query.filter_by(name=name).first():
+            return 'Category already exists'
+
+        category = Category(name=name)
+        add_instance(category)
+
+
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("categories_admin.html", form=form, tournaments=tournaments)
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
+    
+@app.route("/admin/categoryId", methods = ['GET', 'POST'])
+@login_required
+def categoryId_admin():
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("category_admin.html")
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
+
+
+@app.route("/admin/athletes", methods = ['GET', 'POST'])
+@login_required
+def athletes_admin():
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("athletes_admin.html")
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
+
+
+@app.route("/admin/judges", methods = ['GET', 'POST'])
+@login_required
+def judges_admin():
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("judges_admin.html")
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")
+
+
+@app.route("/admin/users", methods = ['GET', 'POST'])
+@login_required
+def users_admin():
+    if current_user.user_type == "admin" or "superadmin":
+        return render_template("judges_admin.html")
+    else:
+        flash("You are not an admin!")
+        return render_template("index.html")       
+
+
+
+
 
 @app.route("/get_users", methods = ['GET'])
 @login_required
@@ -116,7 +196,6 @@ def create_user():
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
         user = Users.query.filter_by(username=form.username.data).first()
         if user is None:
-            user = Users(username = form.username.data, real_name = form.real_name.data, password_hash = hashed_pw, user_type = 'user')
             add_instance(Users,username = form.username.data, real_name = form.real_name.data, password_hash = hashed_pw, user_type = 'user')
         username = form.username.data
         form.username.data = ''
@@ -341,9 +420,8 @@ class UserType(Enum):
     
 
 
-class TournamentForm(FlaskForm):
-	name = StringField("name:", validators=[DataRequired()])
 
+     
 
 class UserForm(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
@@ -375,3 +453,6 @@ class CategoryForm(FlaskForm):
     name = StringField('Category Name', validators=[DataRequired()])
     submit = SubmitField('Create Category')
 
+class TournamentForm(FlaskForm):
+    submit = SubmitField('Criar Troneio')
+    name = StringField('Nome do Torneio: ', validators=[DataRequired()])

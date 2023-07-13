@@ -11,4 +11,4 @@ COPY templates /backend/
 WORKDIR /backend
 ENV PYTHONPATH=/backend
 ENV PATH=/root/.local/bin:$PATH
-CMD flask run --host=0.0.0.0
+CMD flask run --debug --host=0.0.0.0
