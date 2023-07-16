@@ -1,1 +1,4 @@
 venv
+*.mdf
+*.ldf
+database/mysql.sock
