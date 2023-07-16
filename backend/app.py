@@ -191,7 +191,7 @@ def get_tournaments():
 @login_required
 def get_category():
     category = Category.query.all()
-    return render_template('category_admin_page.html', category=category)
+    return render_template('category_admin.html', category=category)
 
 @app.route("/create_user", methods = ['GET', 'POST'])
 def create_user():
