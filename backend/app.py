@@ -74,6 +74,8 @@ def admin():
     else:
         flash("You are not an admin!")
         return render_template("index.html")
+    
+#####################################################
 
 @app.route("/admin/tournaments", methods = ['GET', 'POST'])
 @login_required
