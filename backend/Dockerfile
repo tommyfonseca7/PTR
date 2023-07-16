@@ -7,7 +7,6 @@ FROM python:latest
 EXPOSE 5000
 COPY --from=builder /root/.local /root/.local
 COPY . /backend
-COPY templates /backend/
 WORKDIR /backend
 ENV PYTHONPATH=/backend
 ENV PATH=/root/.local/bin:$PATH

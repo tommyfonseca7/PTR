@@ -1,13 +1,45 @@
-{% extends 'base.html' %}
-{% block title %}PTR - Home{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTR</title>
+    <link rel="stylesheet" href="../static/css/styleFront.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
 
-{% block content%}
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="..\static\images\logo.png" alt="">
+            </div>
+            <nav>
+                <a href="">Provas</a>
+                <a href="">Login<span class="material-symbols-sharp">login</span></a>
+            </nav>
+        </header>
 
-<section class="welcome">
-    <h2 class="welcome-text">Bem-vindo ao Poomsae Tournament Refereeing</h2>
-    <img src="../static/images/logo.png" alt="">
-    <p>O Poomsae Tournament Refereeing (PTR) é uma aplicação que vem com o objetivo principal de retificar uma área dos torneios de Taekwondo onde estes tem sido prejudicado devido à prática do desporto com um equipamento rudimentar, deixando por vezes de funcionar em momentos cruciais da competição.
-        Esta aplicação / website surge como maneira de ajudar a Federação Portuguesa de Taekwondo a tentar obter um sistema melhor que o atual, não perdendo os principais funcionalidades da mesma.</p>
-</section>
+        <main>
+            <div class="presentation">
+                <h1>Poomsae Taekwondo Refereeing</h1>
+                <p>O Poomsae Tournament Refereeing (PTR) é uma aplicação que vem com o objetivo principal de retificar uma área dos torneios de Taekwondo onde estes tem sido prejudicado devido à prática do desporto com um equipamento rudimentar, deixando por vezes de funcionar em momentos cruciais da competição. Esta aplicação / website surge como maneira de ajudar a Federação Portuguesa de Taekwondo a tentar obter um sistema melhor que o atual, não perdendo os principais funcionalidades da mesma.</p>
+            </div>
+            <div class="active-tournaments">
+                <h2>Torneios Ativos</h2>
+                <div class="torneios">
+                    <div class="torneio-item">
+                        <h3>Nome do Torneio</h3>
+                        <small class="text-muted">08/07/2023</small>
+                        <h5>7 Categorias</h3>
+                        <div class="options">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
 
-{% endblock%}
+    </div>
+    
+</body>
+</html>
