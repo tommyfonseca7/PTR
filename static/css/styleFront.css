@@ -303,3 +303,47 @@ form {
     font-size: 0.8rem;
 
   }
+
+/* Poomsae Athlete */
+
+main .presentation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main .grades{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+main .grades div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-white);
+    padding: 1rem;
+    border-radius: var(--card-border-readius);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+main .grades div:nth-child(-n+3) {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+main .grades div h3{
+    font-size: 3rem;
+}
+
+main .grades div:nth-last-child(-n+3) {
+    background: var(--color-primary-variant);
+    color: var(--color-white);
+}

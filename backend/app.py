@@ -174,6 +174,10 @@ def provas():
     category = Category.query.all()
     return render_template('provas.html', tournaments=tournaments, category=category)
 
+@app.route("/poomsae_athlete", methods = ['GET']) 
+def poomsaes_athlete():
+    return render_template('poomsae-athlete.html')
+
 
 @app.route("/get_judges", methods = ['GET'])
 @login_required
