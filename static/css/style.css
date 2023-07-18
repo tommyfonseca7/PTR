@@ -904,13 +904,13 @@ input[type="radio"]:checked + label{
     font-size: 18px;
   }
   
-  /* Add a green text color and a checkmark when the requirements are right */
-  .valid {
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
     color: green;
   }
   
   .valid:before {
-    position: relative;
+    position: absolute;
     left: -35px;
     content: "✔";
   }
@@ -921,7 +921,7 @@ input[type="radio"]:checked + label{
   }
   
   .invalid:before {
-    position: relative;
+    position: absolute;
     left: -35px;
     content: "✖";
   }

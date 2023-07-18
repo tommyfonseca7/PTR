@@ -347,3 +347,26 @@ main .grades div:nth-last-child(-n+3) {
     background: var(--color-primary-variant);
     color: var(--color-white);
 }
+
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: absolute;
+    left: -35px;
+    content: "✔";
+  }
+  
+  /* Add a red text color and an "x" when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+  
+  .invalid:before {
+    position: absolute;
+    left: -35px;
+    content: "✖";
+  }

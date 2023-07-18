@@ -12,9 +12,9 @@
     {{ form.real_name.label }}
     {{ form.real_name() }}
     <br>
-    <div id = "password", name = "password">
-    {{ form.password_hash.label }}
-    {{ form.password_hash() }}
+    <div id="password" name="password">
+        {{ form.password_hash.label }}
+        {{ form.password_hash() }}
     </div>
     {{ form.password_hash2.label }}
     {{ form.password_hash2() }}
@@ -26,7 +26,6 @@
         <p id="number" class="invalid">A <b>number</b></p>
         <p id="length" class="invalid">Minimum <b>8 characters</b></p>
     </div>
-    
 
     <br><br>
     {{ form.submit() }}
@@ -35,67 +34,58 @@
 
 {% for message in get_flashed_messages() %}
     <div class="alert">
-       <p>{{ message }}</p> 
+        <p>{{ message }}</p>
     </div>
 {% endfor %}
 
 <br><br>
 
 <script>
-    var myInput = document.getElementById("password");
-    var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
-    
-   
-    myInput.onfocus = function() {
-      document.getElementById("message").style.display = "block";
-    }
-    
+    // Function to check the validity of the password
+    function validatePassword() {
+        var password = document.getElementById('password').getElementsByTagName('input')[0].value;
 
-    myInput.onblur = function() {
-      document.getElementById("message").style.display = "none";
-    }
-    
-    myInput.onkeyup = function() {
-      var lowerCaseLetters = /[a-z]/g;
-      if(myInput.value.match(lowerCaseLetters)) {
-        letter.classList.remove("invalid");
-        letter.classList.add("valid");
-      } else {
-        letter.classList.remove("valid");
-        letter.classList.add("invalid");
-    }
-    
-      var upperCaseLetters = /[A-Z]/g;
-      if(myInput.value.match(upperCaseLetters)) {
-        capital.classList.remove("invalid");
-        capital.classList.add("valid");
-      } else {
-        capital.classList.remove("valid");
-        capital.classList.add("invalid");
-      }
-    
-      var numbers = /[0-9]/g;
-      if(myInput.value.match(numbers)) {
-        number.classList.remove("invalid");
-        number.classList.add("valid");
-      } else {
-        number.classList.remove("valid");
-        number.classList.add("invalid");
-      }
-    
-      if(myInput.value.length >= 8) {
-        length.classList.remove("invalid");
-        length.classList.add("valid");
-      } else {
-        length.classList.remove("valid");
-        length.classList.add("invalid");
-      }
-    }
-    </script>
+        // Validate lowercase letter
+        var letter = /[a-z]/;
+        if (letter.test(password)) {
+            document.getElementById('letter').classList.remove('invalid');
+            document.getElementById('letter').classList.add('valid');
+        } else {
+            document.getElementById('letter').classList.remove('valid');
+            document.getElementById('letter').classList.add('invalid');
+        }
 
+        // Validate capital letter
+        var capital = /[A-Z]/;
+        if (capital.test(password)) {
+            document.getElementById('capital').classList.remove('invalid');
+            document.getElementById('capital').classList.add('valid');
+        } else {
+            document.getElementById('capital').classList.remove('valid');
+            document.getElementById('capital').classList.add('invalid');
+        }
 
-  
-{% endblock%}
+        // Validate number
+        var number = /[0-9]/;
+        if (number.test(password)) {
+            document.getElementById('number').classList.remove('invalid');
+            document.getElementById('number').classList.add('valid');
+        } else {
+            document.getElementById('number').classList.remove('valid');
+            document.getElementById('number').classList.add('invalid');
+        }
+
+        // Validate length
+        if (password.length >= 8) {
+            document.getElementById('length').classList.remove('invalid');
+            document.getElementById('length').classList.add('valid');
+        } else {
+            document.getElementById('length').classList.remove('valid');
+            document.getElementById('length').classList.add('invalid');
+        }
+    }
+
+    // Add an event listener to the password input field to trigger validation on input
+    document.getElementById('password').getElementsByTagName('input')[0].addEventListener('input', validatePassword);
+</script>
+{% endblock %}
