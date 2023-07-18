@@ -12,11 +12,11 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="..\static\images\logo.png" alt="">
+                <a href="{{ url_for('index')}}"><img src="..\static\images\logo.png" alt=""></a>
             </div>
             <nav>
-                <a href="">Provas</a>
-                <a href="">Login<span class="material-symbols-sharp">login</span></a>
+                <a href="{{ url_for('list_categories') }}">Provas</a>
+                <a href="{{ url_for('login')}}">Login<span class="material-symbols-sharp">login</span></a>
             </nav>
         </header>
         {% block content %}
