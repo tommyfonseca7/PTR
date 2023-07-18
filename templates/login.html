@@ -1,24 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'base-new.html' %}
 {% block title %}PTR - LogIn{% endblock %}
 
 {% block content%}
-<br> <br>
-<form action="" method="post">
-  {{ form.hidden_tag() }}
+<main>
+  <div class="login">
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+    
+      {{ form.username.label }}
+      {{ form.username() }}
+      <br>
+      {{ form.password.label }}
+      {{ form.password() }}
+      <br><br>
+      {{ form.submit() }}
+    
+    
+    {% for message in get_flashed_messages() %}
+      <div class="alert">
+          <p>{{ message}}</p> 
+      </div>
+    {% endfor %}
 
-  {{ form.username.label }}
-  {{ form.username() }}
-  <br>
-  {{ form.password.label }}
-  {{ form.password() }}
-  <br><br>
-  {{ form.submit() }}
-
-
-{% for message in get_flashed_messages() %}
-  <div class="alert">
-      <p>{{ message}}</p> 
+    <a href="">
+      <small class="create-anchor">
+        Ainda não tem conta? Clique aqui para criar.
+      </small>
+    </a>
   </div>
-{% endfor %}
+</main>
+
 
 {% endblock%}

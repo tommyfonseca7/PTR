@@ -1,5 +1,5 @@
-{% extends 'base.html' %}
-{% block title %}PTR - Add User{% endblock %}
+{% extends 'base-new.html' %}
+{% block title %}PTR - Registo{% endblock %}
 
 {% block content%}
 <br> <br>
@@ -16,17 +16,17 @@
     {{ form.password_hash.label }}
     {{ form.password_hash() }}
     </div>
+    {{ form.password_hash2.label }}
+    {{ form.password_hash2() }}
+    <br>
     <div id="message">
         <h3>Password must contain the following:</h3>
         <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
         <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
         <p id="number" class="invalid">A <b>number</b></p>
         <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-      </div>
-    <br>
-    {{ form.password_hash2.label }}
-    {{ form.password_hash2() }}
-    <br>
+    </div>
+    
 
     <br><br>
     {{ form.submit() }}
@@ -35,7 +35,7 @@
 
 {% for message in get_flashed_messages() %}
     <div class="alert">
-       <p>{{ message}}</p> 
+       <p>{{ message }}</p> 
     </div>
 {% endfor %}
 
