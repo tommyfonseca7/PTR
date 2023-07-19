@@ -61,7 +61,7 @@
         <main>
             <h1>Categorias</h1>
 
-            {% for tournament in tournament %}
+            {% for tournament in tournaments %}
             <div class="torneios-categorias">
                 <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
                     <h3>{{ tournament.name }}</h3>
@@ -94,77 +94,6 @@
             </div>
             {% endfor %}
 
-            <div class="torneios-categorias">
-                <button onclick="show_hide('list-items1')" class="btn-categorias">
-                    <h3>Nome do Torneio</h3>
-                    <span class="material-symbols-sharp">expand_more</span>
-                </button>
-               
-                <div class="categorias" id="list-items1">
-                    <div class="categoria-item">
-                        <h3>DAN SUB-30 M</h3>
-                        <small class="text-muted">20 Atletas</small>
-                        <div class="options">
-                            <a href="" class="delete">
-                                <span class="material-symbols-sharp">delete</span>
-                            </a>
-                            <a href="" class="edit">
-                                <span class="material-symbols-sharp">edit</span>
-                            </a>
-                        </div>
-                    </div>
-        
-                    <div class="categoria-item">
-                        <h3>DAN SUB-30 M</h3>
-                        <small class="text-muted">20 Atletas</small>
-                        <div class="options">
-                            <a href="" class="delete">
-                                <span class="material-symbols-sharp">delete</span>
-                            </a>
-                            <a href="" class="edit">
-                                <span class="material-symbols-sharp">edit</span>
-                            </a>
-                        </div>
-                    </div>
-        
-                    <div class="categoria-item add-categoria">
-                        <a onclick="show_popup('bg-popup-category')">
-                            <span class="material-symbols-sharp">add</span>
-                            <h4>Adicionar Categoria</h4>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        
-            <div class="torneios-categorias">
-                <button onclick="show_hide('list-items2')" class="btn-categorias">
-                    <h3>Nome do Torneio</h3>
-                    <span class="material-symbols-sharp">expand_more</span>
-                </button>
-               
-                <div class="categorias" id="list-items2">
-                    <div class="categoria-item">
-                        <h3>DAN SUB-30 M</h3>
-                        <small class="text-muted">20 Atletas</small>
-                        <div class="options">
-                            <a href="" class="delete">
-                                <span class="material-symbols-sharp">delete</span>
-                            </a>
-                            <a href="" class="edit">
-                                <span class="material-symbols-sharp">edit</span>
-                            </a>
-                        </div>
-                    </div>
-        
-                    <div class="categoria-item add-categoria">
-                        <a href="">
-                            <span class="material-symbols-sharp">add</span>
-                            <h4>Adicionar Categoria</h4>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <div class="bg-popup" id="bg-popup-category">
                 <div class="add-category-popup">
                     <h2>Adicionar Categoira</h2>
@@ -176,6 +105,9 @@
                     
                         {{ form.name.label }}
                         {{ form.name() }}
+
+                        {{ form.tournament}}
+
                         <br>
                         <br><br>
                         {{ form.submit() }}

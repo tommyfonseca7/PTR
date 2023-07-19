@@ -7,6 +7,7 @@
     <title>{% block title %} PTR {% endblock %}</title>
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+    <script src="https://unpkg.com/htmx.org@1.9.3"></script>
 </head>
 <body class="admin-body">
     <div class="container">
@@ -25,7 +26,7 @@
                     <h3>Dashboard</h3>
                 </a>
 
-                <a href="{{ url_for('tounaments_admin') }}">
+                <a href="{{ url_for('tournaments_admin') }}">
                     <span class="material-symbols-sharp">diversity_2</span>
                     <h3>Torneios</h3>
                 </a>
@@ -59,18 +60,30 @@
         </aside>
 
         <main>
-            <div class="categoria-container">
-                <h1>Categoria DAN SUB-30 M</h1>
-                <a href="" class="edit">
-                    <span class="material-symbols-sharp">edit</span>
-                </a>
+            <div class="arbitros-container">
+                <h1>Arbitros</h1>
             </div>
-            <h2>Competidores</h2>
-            <div class="competidores">
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
+            <div class="arbitros">
+                {% for judge in judges %}
+                <div class="arbitro-item">
+                    <h3>{{ judge.type_of_jury }}</h3>
+                    <h5>{{ judge.category }}</h3>
+                    <small class="text-muted">{{ judge.tournament }}</small>
+                    <div class="options">
+                        <a href="" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        <a href="" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+        
+                <div class="arbitro-item">
+                    <h3>Tipo de Arbitro</h3>
+                    <h5>Categoria</h3>
+                    <small class="text-muted">Torneio</small>
                     <div class="options">
                         <a href="" class="delete">
                             <span class="material-symbols-sharp">delete</span>
@@ -81,75 +94,39 @@
                     </div>
                 </div>
         
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
                 
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="competidor-item add-competidor">
-                    <a href="">
+                <div class="competidor-item add-arbitro" onclick="show_popup('bg-arbitro-add')">
+                    <a>
                         <span class="material-symbols-sharp">add</span>
-                        <h4>Adicionar Atleta</h4>
+                        <h4>Adicionar Arbitro</h4>
                     </a>
+                </div>
+            </div>
+
+            <div class="bg-popup" id="bg-arbitro-add">
+                <div class="add-torneio-poppup" id="add-torneio">
+                    <a id="close-btn-torneio" onclick="hide_popup('bg-arbitro-add')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <h2>Adicionar Arbitro</h2>
+                    <form action="" method="POST">
+                        {{ form.tournament.label}}
+                        {{ form.tournament(**{"hx-get" : "/get_categories", "hx-target" : "#category"}) }}
+
+                        {{ form.category.label }}
+                        {{ form.category }}
+
+
+
+                       {{ form.submit() }}
+                    </form>
                 </div>
             </div>
         
         </main>
-
     </div>
     
 
-    <script src="../static/scripts/script.js"></script>
+    <script src="..\static\script.js"></script>
     </body>
     </html>

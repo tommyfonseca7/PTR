@@ -18,17 +18,20 @@ class Users(db.Model, UserMixin):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     user_type = db.Column(db.Enum('user', 'judge', 'admin', 'superadmin', 'athlete'), default='user')
 
-class Category(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False, unique=True)
-    
-
 class Tournament(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     active = db.Column(db.Boolean, default= True)
     list_of_judges = db.relationship('Judge', lazy='dynamic')
     list_of_athletes = db.relationship('Athlete', lazy='dynamic')
+    categories = db.relationship('Category', back_populates='tournament')
+
+class Category(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False, unique=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable = False)
+    tournament = db.relationship('Tournament', back_populates='categories')
+
 
 class Judge(db.Model):
     __tablename__ = 'judge'

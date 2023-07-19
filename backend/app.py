@@ -8,6 +8,7 @@ from backend.database import add_instance,delete_instance,commit_changes
 from flask_sqlalchemy import SQLAlchemy
 from wtforms import StringField, SubmitField, PasswordField, IntegerField, SelectField
 from wtforms.validators import DataRequired, EqualTo, InputRequired
+from wtforms_sqlalchemy.fields import QuerySelectField
 from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae,app
 from flask_socketio import join_room, leave_room, emit, SocketIO
 
@@ -110,14 +111,14 @@ def categories_admin():
 
     if form.validate_on_submit():
         name = form.name.data
-        if CategoryForm.query.filter_by(name=name).first():
+        tournament = form.tournament.data
+        tournament_id = tournament.id
+        if Category.query.filter_by(name=name).first():
             return 'Category already exists'
-
-        category = Category(name=name)
-        add_instance(category)
+        add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
 
 
-    if current_user.user_type == "admin" or "superadmin":
+    if current_user.user_type == "admin" or current_user.user_type == "superadmin":
         return render_template("categories_admin.html", form=form, tournaments=tournaments)
     else:
         flash("You are not an admin!")
@@ -146,12 +147,21 @@ def athletes_admin():
 @app.route("/admin/judges", methods = ['GET', 'POST'])
 @login_required
 def judges_admin():
+    form = JudgeForm()
+    form.category.query = Category.query.filter(None).all()
+
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("judges_admin.html")
+        return render_template("judges_admin.html", form=form)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
 
+@app.route("/get_categories", methods = ['GET', 'POST'])
+@login_required
+def get_categories():
+    tournament_id = request.args.get("tournament", type=int)
+    categories = Category.query.filter_by(tournament_id=tournament_id).all()
+    return render_template("category_options.html", categories=categories)
 
 @app.route("/admin/users", methods = ['GET', 'POST'])
 @login_required
@@ -533,6 +543,8 @@ def judgeInterface():
 
 
 
+
+
 ########################################################################################################
 
 
@@ -557,8 +569,8 @@ class UserForm(FlaskForm):
 
 class JudgeForm(UserForm):
     type_of_jury = SelectField('Type of Jury', choices=[('normal', 'Normal'), ('major', 'Major')], default='normal')
-    category_name = StringField('Category Name')
-    tournament_id = IntegerField('ID do torneio')
+    tournament = QuerySelectField('Tournament', query_factory=lambda: Tournament.query.all(), allow_blank = True, get_label = "name")
+    category = QuerySelectField('Category', get_label= "name", allow_blank = True)
     submit = SubmitField('Submit')
 
 class AthleteForm(UserForm):
@@ -575,6 +587,7 @@ class AdminForm(UserForm):
     
 class CategoryForm(FlaskForm):
     name = StringField('Category Name', validators=[DataRequired()])
+    tournament = QuerySelectField('Tournament', query_factory=lambda: Tournament.query.all(), allow_blank = True, get_label ="name")
     submit = SubmitField('Create Category')
 
 class TournamentForm(FlaskForm):
