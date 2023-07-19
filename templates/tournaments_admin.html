@@ -25,7 +25,7 @@
                     <h3>Dashboard</h3>
                 </a>
 
-                <a href="{{ url_for('tounaments_admin') }}" class="active">
+                <a href="{{ url_for('tournaments_admin') }}" class="active">
                     <span class="material-symbols-sharp">diversity_2</span>
                     <h3>Torneios</h3>
                 </a>
@@ -63,13 +63,13 @@
             
             <div class="torneios">
 
-                {% for tournament in tournament %}
+                {% for tournament in tournaments %}
                 <div class="torneio-item">
                     <h3>{{ tournament.name }}</h3>
                     <small class="text-muted">08/07/2023</small>
-                    <h5>{{ tournament.list_of_categories|length }} Categorias</h3>
+
                     <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
+                        <a onclick="show_popup('bg-torneio-delete', {{tournament.id}})" class="delete">
                             <span class="material-symbols-sharp">delete</span>
                         </a>
                         <a href="" class="edit">
@@ -181,6 +181,6 @@
 
     </div>
 
-<script src="../static/scripts/script.js"></script>
+<script src="../static/script.js"></script>
 </body>
 </html>

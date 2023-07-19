@@ -53,6 +53,8 @@ def login():
                     # Redirect the user to the stored URL
                     return redirect(session['next'])
                 # If there is no stored URL, redirect to the dashboard
+                if user.user_type == "admin" or "superadmin":
+                    return redirect(url_for('categories_admin'))
                 return redirect(url_for('index'))
             else:
                 flash("Wrong password - Try Again!")
@@ -79,7 +81,7 @@ def admin():
 
 @app.route("/admin/tournaments", methods = ['GET', 'POST'])
 @login_required
-def tounaments_admin():
+def tournaments_admin():
     form = TournamentForm()
     tournaments = Tournament.query.all()
 
@@ -89,7 +91,9 @@ def tounaments_admin():
             return 'Tournament already exists'
 
         tournament = Tournament(name=name)
-        add_instance(tournament)
+        add_instance(Tournament, name = name)
+        flash('Tournament created!')
+        return redirect(url_for('tournaments_admin'))
 
     if current_user.user_type == "admin" or "superadmin":
         return render_template("tournaments_admin.html", form=form, tournaments = tournaments)
@@ -244,6 +248,18 @@ def update_category(id):
 
     return render_template('update_category.html', form=form)
 
+@app.route("/admin/tournaments/delete/<int:tournament_id>", methods = ['GET', 'POST'])
+@login_required
+def delete_tournament(tournament_id):
+    tournament = Tournament.query.get_or_404(tournament_id)
+
+    if request.method == 'POST':
+        tournament.delete()
+        flash('Tournament deleted!')
+        return redirect(url_for('tournaments_admin'))
+
+    return render_template('delete_tournament.html', tournament=tournament)
+
 @app.route('/delete_category/<int:id>', methods=['GET', 'POST'])
 def delete_category(id):
     category = Category.query.get_or_404(id)
@@ -324,7 +340,7 @@ def create_judge():
             add_instance(category)
         if tournament is None:
             tournament = Tournament(name = form.category_name.data + "tournament")
-            add_instance(tournament)
+            add_instance(Tournament, name = form.category_name.data + "tournament")
         
         judge = Judge(user=user, category_name=category.name, tournament_id=form.tournament_id.data, type_of_jury=form.type_of_jury.data)
         username = form.username.data
