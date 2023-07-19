@@ -171,13 +171,17 @@ function show_hide(divId) {
 
 function show_popup(divId, tournamentId) {
   var click = document.getElementById(divId);
-  console.log("Tournament ID:", tournamentId);
   click.style.display = "flex";
+
+  const hiddenInput = document.createElement('input');
+  hiddenInput.type = 'hidden';
+  hiddenInput.id = 'tournament_id';
+  hiddenInput.value = tournamentId;
+  click.appendChild(hiddenInput);
 }
+
 
 function hide_popup(divId) {
   var click = document.getElementById(divId);
   click.style.display = "none";
 }
-
-

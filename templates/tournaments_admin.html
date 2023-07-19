@@ -67,9 +67,10 @@
                 <div class="torneio-item">
                     <h3>{{ tournament.name }}</h3>
                     <small class="text-muted">08/07/2023</small>
+                    <h5 id="tournament_id">{{ tournament.id }}</h5>
 
                     <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete', {{tournament.id}})" class="delete">
+                        <a href="{{ url_for('delete_tournament', tournament_id=tournament.id) }}" class="delete">
                             <span class="material-symbols-sharp">delete</span>
                         </a>
                         <a href="" class="edit">
@@ -79,61 +80,6 @@
                 </div>
                 {% endfor %}
 
-                <div class="torneio-item">
-                    <h3>Nome do Torneio</h3>
-                    <small class="text-muted">08/07/2023</small>
-                    <h5>7 Categorias</h3>
-                    <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="torneio-item">
-                    <h3>Nome do Torneio</h3>
-                    <small class="text-muted">08/07/2023</small>
-                    <h5>7 Categorias</h3>
-                    <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="torneio-item">
-                    <h3>Nome do Torneio</h3>
-                    <small class="text-muted">08/07/2023</small>
-                    <h5>7 Categorias</h3>
-                    <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="torneio-item">
-                    <h3>Nome do Torneio</h3>
-                    <small class="text-muted">08/07/2023</small>
-                    <h5>7 Categorias</h3>
-                    <div class="options">
-                        <a onclick="show_popup('bg-torneio-delete')" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
                 
                 <div class="torneio-item add-torneio" onclick="show_popup('bg-torneio-add')">
                     <a id="add-torneio-btn">
@@ -161,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="bg-popup" id="bg-torneio-delete">
+            <!-- <div class="bg-popup" id="bg-torneio-delete">
                 <div class="delete-torneio-popup">
                     <a onclick="hide_popup('bg-torneio-delete')">
                         <span class="material-symbols-sharp">close</span>
@@ -172,15 +118,11 @@
                         <button>Cancelar</button>
                     </div>
                 </div>
-            </div>
-
-            
-
-            
+            </div> -->
         </main>
 
     </div>
 
-<script src="../static/script.js"></script>
+<script src="static\script.js"></script>
 </body>
 </html>

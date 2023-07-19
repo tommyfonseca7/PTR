@@ -253,12 +253,12 @@ def update_category(id):
 def delete_tournament(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
 
-    if request.method == 'POST':
-        tournament.delete()
+    if tournament != 0:
+        delete_instance(tournament, tournament.id)
         flash('Tournament deleted!')
         return redirect(url_for('tournaments_admin'))
 
-    return render_template('delete_tournament.html', tournament=tournament)
+    return render_template('dashboard_admin.html')
 
 @app.route('/delete_category/<int:id>', methods=['GET', 'POST'])
 def delete_category(id):

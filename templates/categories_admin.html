@@ -185,6 +185,28 @@
             </div>
         </main>
     </div>
-    <script src="../static/scripts/script.js"></script>
+    <script>
+            function show_hide(divId) {
+            var click = document.getElementById(divId);
+            if (click.style.display === "none") {
+                click.style.display = "grid";
+            } else {
+                click.style.display = "none";
+            }
+            }
+
+
+            function show_popup(divId, tournamentId) {
+            var click = document.getElementById(divId);
+            console.log("Tournament ID:", tournamentId);
+            click.style.display = "flex";
+            }
+
+            function hide_popup(divId) {
+            var click = document.getElementById(divId);
+            click.style.display = "none";
+            }
+
+    </script>
     </body>
     </html>

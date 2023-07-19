@@ -265,6 +265,10 @@ main .torneios .add-torneio a:hover{
     color: var(--color-primary-variant);
 }
 
+main .torneios .torneio-item .options a{
+    cursor: pointer;
+}
+
 
 .add-torneio-poppup{
     display: none;
@@ -308,6 +312,7 @@ main .torneios .add-torneio a:hover{
     background-color: var(--color-danger);
     color: var(--color-white);
     padding: 0.5rem;
+    cursor: pointer;
 }
 
 .btns button:last-child{
@@ -320,6 +325,7 @@ main .torneios .add-torneio a:hover{
     position: absolute;
     top: 0.8rem;
     right: 0.8rem;
+    cursor: pointer;
 }
 
 .delete-torneio-popup h2 {
@@ -331,6 +337,7 @@ main .torneios .add-torneio a:hover{
     position: absolute;
     top: 0.8rem;
     right: 0.8rem;
+    cursor: pointer;
 }
 
 .add-torneio-poppup h2 {
