@@ -11,9 +11,15 @@ from wtforms.validators import DataRequired, EqualTo, InputRequired
 from wtforms_sqlalchemy.fields import QuerySelectField
 from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae,app
 from flask_socketio import join_room, leave_room, emit, SocketIO
+import logging
 
 
-
+app.logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler('app.log')
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+app.logger.addHandler(file_handler)
     
     
 #Flask_Login
@@ -116,7 +122,9 @@ def categories_admin():
         name = form.name.data
         tournament = form.tournament.data
         tournament_id = tournament.id
+        
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
+        add_instance(Athlete, name=name, category_id = 1, tournament_id = tournament_id, active = False)
 
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
@@ -138,23 +146,27 @@ def categoryId_admin():
 @app.route("/admin/athletes", methods = ['GET', 'POST'])
 @login_required
 def athletes_admin():
+    
     form = AthleteForm()
     categories = Category.query.all()
     athletes = Athlete.query.all()
     tournament = Tournament.query.all()
+    flash(" is validated!")
 
-    if form.validate_on_submit():
-        flash("Form is validated!")  # Add this flash message for debugging purposes
-        name = form.name.data
-        category = form.category.data
-        category_id = category.id
-        tournament = form.tournament.data
-        tournament_id = tournament.id
-        add_instance(Athlete, name=name, category_id=category_id, tournament_id = tournament_id, active = False)
-        flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+    
+    if request.method == "POST":
+            app.logger.debug('Received a POST request!')
+            flash("Form is validated!")  # Add this flash message for debugging purposes
+            name = form.name.data
+            category = form.category.data
+            category_id = category.id
+            tournament = form.tournament.data
+            tournament_id = tournament.id
+            add_instance(Athlete, name=name, category_id=category_id, tournament_id = tournament_id, active = False)
+            flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
 
-    if current_user.user_type in ["admin", "superadmin"]:
-        return render_template("athletes_admin.html", form=form, athletes=athletes, categories=categories, tournament=tournament)
+    if current_user.user_type == "admin" or current_user.user_type == "superadmin":
+        return render_template("athletes_admin.html", form=form, athlete=athletes, categories=categories, tournament=tournament)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -279,6 +291,18 @@ def delete_tournament(tournament_id):
         return redirect(url_for('tournaments_admin'))
 
     return render_template('dashboard_admin.html')
+
+@app.route("/admin/athlete/delete/<int:athlete_id>", methods = ['GET', 'POST'])
+@login_required
+def delete_athlete(athlete_id):
+    athlete = Athlete.query.get_or_404(athlete_id)
+
+    if athlete != 0:
+        delete_instance(athlete, athlete.id)
+        flash('Athlete deleted!')
+        return redirect(url_for('athletes_admin'))
+
+    return render_template('athletes_admin.html')
 
 @app.route('/delete_category/<int:id>', methods=['GET', 'POST'])
 def delete_category(id):
@@ -587,7 +611,7 @@ class AthleteForm(UserForm):
     name = StringField("Username", validators=[DataRequired()])
     category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), allow_blank = True, get_label ="name")
     tournament = QuerySelectField('Tournament', query_factory=lambda: Tournament.query.all(), allow_blank = True, get_label ="name")
-    submit = SubmitField("Submit")
+    submit = SubmitField("Create Athlete")
 
 class LoginForm(FlaskForm):
 	username = StringField("Username", validators=[DataRequired()])

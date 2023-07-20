@@ -61,12 +61,22 @@
         <main>
             <h1>Competidores</h1>
             <div class="competidores">
+
+                {% for athlete in athlete %}
                 <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
+                    <h3>{{ athlete.name }}</h3>
+                    {% for categories in categories%}
+                    {%if categories.id == athlete.category_id%}
+                    <h5>{{categories.name}}</h3>
+                    {% endif %}
+                    {% endfor %}
+                    {% for tournament in tournament %}
+                    {% if athlete.tournament_id == tournament.id%}
+                    <small class="text-muted">{{tournament.name}}</small>
+                    {% endif %}
+                    {% endfor %}
                     <div class="options">
-                        <a href="" class="delete">
+                        <a href="{{ url_for('delete_athlete', athlete_id=athlete.id) }}" class="delete">
                             <span class="material-symbols-sharp">delete</span>
                         </a>
                         <a href="" class="edit">
@@ -74,74 +84,47 @@
                         </a>
                     </div>
                 </div>
-
-    
-                    {% for athletes in athletes %}
-                    <div class="categorias" id="{{ athletes.name }}">
-                    <div class="categoria-item">
-                        <h3>{{ athletes.name }}</h3>
-                        {% for categories in categories%}
-                        {%if categories.id == athletes.category_id%}
-                        <h5>{{categories.name}}</h3>
-                        {% endif %}
-                        {% endfor %}
-                        {% for tournament in tournament %}
-                        {% if athletes.tournament_id == tournament.id%}
-                        <small class="text-muted">{{tournament.name}}</small>
-                        {% endif %}
-                        {% endfor %}
-                        <div class="options">
-                            <a href="" class="delete">
-                                <span class="material-symbols-sharp">delete</span>
-                            </a>
-                            <a href="" class="edit">
-                                <span class="material-symbols-sharp">edit</span>
-                            </a>
-                        </div>
-                    </div>
-                    {% endfor %}
-
+                {% endfor %}
+                
+                <div class="competidor-item add-competidor" onclick="show_popup('bg-add-competitor')">
+                    <a id = "add-competitor-btn">
+                        <span class="material-symbols-sharp">add</span>
+                        <h4>Adicionar Atleta</h4>
+                    </a>
+                </div>
             </div>
-            <div class="competidor-item add-competidor"onclick="show_popup('bg-torneio-add')">
-                <a id="add-torneio-btn">
-                    <span class="material-symbols-sharp">add</span>
-                    <h4>Adicionar Atleta</h4>
-                </a>
+            
+
+            <div class="bg-popup" id="bg-add-competitor">
+                <div class="add-competitor-poppup" id="add-competitor">
+                    <a id="close-btn-competitor" onclick="hide_popup('bg-add-competitor')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <h2>Adicionar Atleta</h2>
+                    <form action="" method="post">
+                        
+                        {{ form.hidden_tag() }}
+                    
+                        {{ form.name.label }}
+                        {{ form.name() }}
+            
+                        {{ form.category.label }}
+                        {{ form.category }}
+            
+                        {{ form.tournament.label }}
+                        {{ form.tournament }}
+
+                        {{ form.submit() }}
+                    </form>
+                </div>
             </div>
         </main>
     </div>
-
-<div class="bg-popup" id="bg-torneio-add">
-    <div class="add-torneio-poppup" id="add-torneio">
-        <h2>Adicionar Atleta</h2>
-        <a id="close-btn-torneio" onclick="hide_popup('bg-torneio-add')">
-            <span class="material-symbols-sharp">close</span>
-        </a>
-
-        <form action="" method="post">
-            {{ form.csrf_token }}
-            {{ form.hidden_tag() }}
-        
-            {{ form.name.label }}
-            {{ form.name() }}
-
-            {{ form.category.label }}
-            {{ form.category }}
-
-            {{ form.tournament.label }}
-            {{ form.tournament }}
-            
-
-            {{ form.submit() }}
-        </form>
-    </div>
 </div>
+
+
     
-{% for message in get_flashed_messages() %}
-<div class="alert">
-    <p>{{ message}}</p> 
-</div>
-{%endfor%}
-<script src="..\static\script.js"></script>
+    
+    <script src="..\static\script.js"></script>
 </body>
 </html>

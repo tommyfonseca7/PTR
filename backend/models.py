@@ -47,8 +47,8 @@ class Athlete(db.Model, UserMixin):
     __tablename__ = 'athlete'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=True)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'))
     active = db.Column(db.Boolean, default= False)
     list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae')
     athlete_poomsae = db.Table('athlete_poomsae',

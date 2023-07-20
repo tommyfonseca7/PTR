@@ -233,8 +233,8 @@ def get_athletes():
         athlete_data = {
             'id': athlete.id,
             'name': athlete.name,
-            'category_type': athlete.category_type,
             'active': athlete.active,
+            'category_id' : athlete.category_id,
             'tournament_id': athlete.tournament_id,
             'list_of_poomsaes': [poomsae.id for poomsae in athlete.list_of_poomsaes]
         }

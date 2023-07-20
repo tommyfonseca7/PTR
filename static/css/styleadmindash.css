@@ -291,6 +291,16 @@ main .torneios .torneio-item .options a{
     padding: 20px;
 }
 
+.add-competitor-poppup {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    background: var(--color-white);
+    text-align: center;
+    padding: 20px;
+}
+
 /* .delete-torneio-popup {
     position: relative;
     display: flex;
