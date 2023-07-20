@@ -75,64 +75,35 @@
                     </div>
                 </div>
 
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
                 
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
+                    {% for athletes in athletes %}
+                    <div class="categorias" id="{{ athletes.name }}">
+                    {% for categories in categories%}
+                    {% for tournament in tournament %}
+                    <div class="categoria-item">
+                        <h3>{{ athletes.name }}</h3>
+                        {%if categories.id == ahtletes.category_id%}
+                        <h5>{{categories.name}}</h3>
+                        {% endif %}
+                        {% if athletes.tournament_id == tournament.id%}
+                        <small class="text-muted">{{tournament.name}}</small>
+                        {% endif %}
+                        <div class="options">
+                            <a href="" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                            <a href="" class="edit">
+                                <span class="material-symbols-sharp">edit</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
 
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="competidor-item add-competidor">
-                    <a href="">
+
+                <div class="competidor-item add-competidor"onclick="show_popup('bg-torneio-add')">
+                    <a id="add-torneio-btn">
                         <span class="material-symbols-sharp">add</span>
                         <h4>Adicionar Atleta</h4>
                     </a>
@@ -141,7 +112,34 @@
 
         </main>
     </div>
+
+<div class="bg-popup" id="bg-torneio-add">
+    <div class="add-torneio-poppup" id="add-torneio">
+        <a id="close-btn-torneio" onclick="hide_popup('bg-torneio-add')">
+            <span class="material-symbols-sharp">close</span>
+        </a>
+        <h2>Adicionar Atleta</h2>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+        
+            {{ form.name.label }}
+            {{ form.name() }}
+            <br>
+            <br><br>
+            {{ form.category.label }}
+            {{ form.category }}
+            
+
+            {{ form.submit() }}
+        </form>
+    </div>
+</div>
     
-<script src="../static/scripts/script.js"></script>
+{% for message in get_flashed_messages() %}
+<div class="alert">
+    <p>{{ message}}</p> 
+</div>
+{%endfor%}
+<script src="..\static\script.js"></script>
 </body>
 </html>

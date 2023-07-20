@@ -107,6 +107,11 @@
                 </div>
             </div>
 
+            {% for message in get_flashed_messages() %}
+            <div class="alert">
+                <p>{{ message}}</p> 
+            </div>
+          {% endfor %}
             <!-- <div class="bg-popup" id="bg-torneio-delete">
                 <div class="delete-torneio-popup">
                     <a onclick="hide_popup('bg-torneio-delete')">

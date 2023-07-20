@@ -22,24 +22,24 @@ class Tournament(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     active = db.Column(db.Boolean, default= True)
-    list_of_judges = db.relationship('Judge', lazy='dynamic')
-    list_of_athletes = db.relationship('Athlete', lazy='dynamic')
     list_of_categories = db.relationship('Category', lazy='dynamic')
+    
 
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable = False)
     tournament = db.relationship('Tournament', back_populates='list_of_categories')
-
+    list_of_athletes = db.relationship('Athlete', lazy='dynamic')
+    list_of_judges = db.relationship('Judge', lazy='dynamic')
+    
 
 
 class Judge(db.Model):
     __tablename__ = 'judge'
     id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, primary_key=True)
     user = db.relationship('Users', backref=db.backref('judge', uselist=False))
-    category_name = db.Column(db.String(200), db.ForeignKey('category.name'), unique=True)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=True)
     type_of_jury = db.Column(db.Enum('major', 'normal', default = 'normal'))
 
 
@@ -47,9 +47,9 @@ class Athlete(db.Model, UserMixin):
     __tablename__ = 'athlete'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    category_type = db.Column(db.String(200), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=True)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=True)
     active = db.Column(db.Boolean, default= False)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=True)
     list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae')
     athlete_poomsae = db.Table('athlete_poomsae',
     db.Column('athlete_id', db.Integer, db.ForeignKey('athlete.id'), primary_key=True),

@@ -85,13 +85,14 @@ def admin():
 def tournaments_admin():
     form = TournamentForm()
     tournaments = Tournament.query.all()
+    
 
     if form.validate_on_submit():
         name = form.name.data
         if Tournament.query.filter_by(name=name).first():
-            return 'Tournament already exists'
+            flash ('Tournament already exists')
+            return redirect(url_for('tournaments_admin'))
 
-        tournament = Tournament(name=name)
         add_instance(Tournament, name = name)
         flash('Tournament created!')
         return redirect(url_for('tournaments_admin'))
@@ -105,6 +106,7 @@ def tournaments_admin():
 @app.route("/admin/categories", methods = ['GET', 'POST'])
 @login_required
 def categories_admin():
+    
     form = CategoryForm()
     tournaments = Tournament.query.all()
     categories = Category.query.all()
@@ -113,9 +115,7 @@ def categories_admin():
     if form.validate_on_submit():
         name = form.name.data
         tournament = form.tournament.data
-        print(tournament)
         tournament_id = tournament.id
-        print(tournament_id)
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
 
 
@@ -138,8 +138,21 @@ def categoryId_admin():
 @app.route("/admin/athletes", methods = ['GET', 'POST'])
 @login_required
 def athletes_admin():
+    form = AthleteForm()
+    categories = Category.query.all()
+    athletes = Athlete.query.all()
+    tournament = Tournament.query.all()
+
+
+    if form.validate_on_submit():
+        flash("i'm here")
+        name = form.name.data
+        category = form.category.data
+        category_id = category.id
+        add_instance(Athlete, name=name, category_id=category_id)
+        
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("athletes_admin.html")
+        return render_template("athletes_admin.html", form = form, athletes = athletes,  categories = categories,tournament = tournament)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -167,8 +180,11 @@ def get_categories():
 @app.route("/admin/users", methods = ['GET', 'POST'])
 @login_required
 def users_admin():
+
+    
+    
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("judges_admin.html")
+        return render_template("users_admin.html")
     else:
         flash("You are not an admin!")
         return render_template("index.html")       
@@ -183,11 +199,7 @@ def get_users():
     users = Users.query.all()
     return render_template('users_admin_page.html', users=users)
 
-@app.route("/provas" , methods = ['GET'])
-def provas():
-    tournaments = Tournament.query.all()
-    category = Category.query.all()
-    return render_template('provas.html', tournaments=tournaments, category=category)
+
 
 @app.route("/poomsae_athlete", methods = ['GET']) 
 def poomsaes_athlete():
@@ -206,11 +218,6 @@ def get_tournaments():
     tournaments = Tournament.query.all()
     return render_template('tournaments_admin_page.html', tournaments=tournaments)
 
-@app.route("/get_category", methods = ['GET'])
-@login_required
-def get_category():
-    category = Category.query.all()
-    return render_template('category_admin.html', category=category)
 
 @app.route("/create_user", methods = ['GET', 'POST'])
 def create_user():
@@ -575,8 +582,9 @@ class JudgeForm(UserForm):
     submit = SubmitField('Submit')
 
 class AthleteForm(UserForm):
-	age = IntegerField('Age:', validators =[DataRequired()])
-	submit = SubmitField("Submit")
+    name = StringField("Username", validators=[DataRequired()])
+    category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), allow_blank = True, get_label ="name")
+    submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):
 	username = StringField("Username", validators=[DataRequired()])
