@@ -70,11 +70,11 @@
                
                 
                 <div class="categorias" id="{{ tournament.name }}">
-                    {% if tournaments.list_of_categories|length != 0 %} 
-                        {% for category in tournament.list_of_categories %}
+                        {% for categories in categories %}
+                        {% if categories.tournament_id == tournament.id %}
                         <div class="categoria-item">
-                            <h3>{{ category.name }}</h3>
-                            <small class="text-muted">{{ category.list_of_athletes|length }}</small>
+                            <h3>{{ categories.name }}</h3>
+                            <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
                             <div class="options">
                                 <a href="" class="delete">
                                     <span class="material-symbols-sharp">delete</span>
@@ -84,8 +84,8 @@
                                 </a>
                             </div>
                         </div>
+                        {% endif %}
                         {% endfor %}
-                    {% endif %}
                     <div class="categoria-item add-categoria">
                         <a onclick="show_popup('bg-popup-category')">
                             <span class="material-symbols-sharp">add</span>

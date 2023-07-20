@@ -107,17 +107,20 @@ def tournaments_admin():
 def categories_admin():
     form = CategoryForm()
     tournaments = Tournament.query.all()
+    categories = Category.query.all()
 
 
     if form.validate_on_submit():
         name = form.name.data
         tournament = form.tournament.data
+        print(tournament)
         tournament_id = tournament.id
+        print(tournament_id)
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
 
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
-        return render_template("categories_admin.html", form=form, tournaments=tournaments)
+        return render_template("categories_admin.html", form=form, tournaments=tournaments, categories=categories)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
