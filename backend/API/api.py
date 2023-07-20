@@ -35,16 +35,16 @@ def create_category_api():
     return jsonify({'message': 'Category created successfully.'}), 201
 
 
-@user_api.route('/athletes', methods=['POST'])
+@user_api.route('/api/athletes', methods=['POST'])
 def create_athlete():
     data = request.get_json()
     name = data.get('name')
-    category_type = data.get('category_type')
+    category_type = data.get('category_id')
     active = data.get('active')
     tournament_id = data.get('tournament_id')
 
     # Create Athlete
-    athlete = Athlete(name = name, category_type=category_type, active=active, tournament_id=tournament_id)
+    athlete = Athlete(name = name, category_id=category_type, active=active, tournament_id=tournament_id)
     db.session.add(athlete)
     db.session.commit()
 

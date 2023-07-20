@@ -143,16 +143,18 @@ def athletes_admin():
     athletes = Athlete.query.all()
     tournament = Tournament.query.all()
 
-
     if form.validate_on_submit():
-        flash("i'm here")
+        flash("Form is validated!")  # Add this flash message for debugging purposes
         name = form.name.data
         category = form.category.data
         category_id = category.id
-        add_instance(Athlete, name=name, category_id=category_id)
-        
-    if current_user.user_type == "admin" or "superadmin":
-        return render_template("athletes_admin.html", form = form, athletes = athletes,  categories = categories,tournament = tournament)
+        tournament = form.tournament.data
+        tournament_id = tournament.id
+        add_instance(Athlete, name=name, category_id=category_id, tournament_id = tournament_id, active = False)
+        flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+
+    if current_user.user_type in ["admin", "superadmin"]:
+        return render_template("athletes_admin.html", form=form, athletes=athletes, categories=categories, tournament=tournament)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -584,6 +586,7 @@ class JudgeForm(UserForm):
 class AthleteForm(UserForm):
     name = StringField("Username", validators=[DataRequired()])
     category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), allow_blank = True, get_label ="name")
+    tournament = QuerySelectField('Tournament', query_factory=lambda: Tournament.query.all(), allow_blank = True, get_label ="name")
     submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):
