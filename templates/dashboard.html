@@ -105,40 +105,45 @@
                 </div>
             </div>
 
-            {% for tournament in tournaments %}
-            <div class="torneios-categorias">
-                <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
-                    <h3>{{ tournament.name }}</h3>
-                    <span class="material-symbols-sharp">expand_more</span>
-                </button>
-               
-                
-                <div class="categorias" id="{{ tournament.name }}">
-                    {% if tournaments.list_of_categories|length != 0 %} 
-                        {% for category in tournament.list_of_categories %}
-                        <div class="categoria-item">
-                            <h3>{{ category.name }}</h3>
-                            <small class="text-muted">{{ category.list_of_athletes|length }}</small>
-                            <div class="options">
-                                <a href="" class="delete">
-                                    <span class="material-symbols-sharp">delete</span>
-                                </a>
-                                <a href="" class="edit">
-                                    <span class="material-symbols-sharp">edit</span>
-                                </a>
+            <div class="torneios-ativos">
+                <h2>Torneios Ativos</h2>
+                {% for tournament in tournaments %}
+                <div class="torneios-categorias">
+                    <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
+                        <h3>{{ tournament.name }}</h3>
+                        <span class="material-symbols-sharp">expand_more</span>
+                    </button>
+                   
+                    
+                    <div class="categorias" id="{{ tournament.name }}">
+                        {% if tournaments.list_of_categories|length != 0 %} 
+                            {% for category in tournament.list_of_categories %}
+                            <div class="categoria-item">
+                                <h3>{{ category.name }}</h3>
+                                <small class="text-muted">{{ category.list_of_athletes|length }}</small>
+                                <div class="options">
+                                    <a href="" class="delete">
+                                        <span class="material-symbols-sharp">delete</span>
+                                    </a>
+                                    <a href="" class="edit">
+                                        <span class="material-symbols-sharp">edit</span>
+                                    </a>
+                                </div>
                             </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="categoria-item add-categoria">
+                            <a onclick="show_popup('bg-popup-category')">
+                                <span class="material-symbols-sharp">add</span>
+                                <h4>Adicionar Categoria</h4>
+                            </a>
                         </div>
-                        {% endfor %}
-                    {% endif %}
-                    <div class="categoria-item add-categoria">
-                        <a onclick="show_popup('bg-popup-category')">
-                            <span class="material-symbols-sharp">add</span>
-                            <h4>Adicionar Categoria</h4>
-                        </a>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+
+            
             
 
 

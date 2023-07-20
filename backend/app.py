@@ -72,8 +72,9 @@ def logout():
 @app.route("/admin", methods = ['GET', 'POST'])
 @login_required
 def admin():
+    tournaments = Tournament.query.all()
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard.html")
+        return render_template("dashboard.html", tournaments=tournaments)
     else:
         flash("You are not an admin!")
         return render_template("index.html")

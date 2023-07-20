@@ -612,3 +612,7 @@ main .users-circle svg circle{
     stroke-dashoffset: -30;
 }
 
+main .torneios-ativos {
+    margin: 10rem 2rem;
+}
+
