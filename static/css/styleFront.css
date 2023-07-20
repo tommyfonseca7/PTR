@@ -406,3 +406,42 @@ main .torneios-categorias button span{
     justify-content: center;
     gap: 0.5rem;
 }
+
+/* Tabela */
+
+.content-table{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 1.2em;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+
+.content-table thead tr {
+    background-color: var(--color-primary-variant);
+    color: var(--color-white);
+    text-align: left;
+    font-weight: bold;
+    padding: var(--padding-1);
+}
+
+.content-table th,
+.content-table td{
+    padding: 12px 15px;
+}
+
+.content-table tbody tr {
+    border-bottom: 1px solid #ccc;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color: var(--color-info-light);
+}
+
+.content-table tbody tr:last-of-type{
+    border-bottom: 2px solid var(--color-primary-variant);
+}
+
