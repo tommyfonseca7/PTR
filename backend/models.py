@@ -24,13 +24,14 @@ class Tournament(db.Model, UserMixin):
     active = db.Column(db.Boolean, default= True)
     list_of_judges = db.relationship('Judge', lazy='dynamic')
     list_of_athletes = db.relationship('Athlete', lazy='dynamic')
-    categories = db.relationship('Category', back_populates='tournament')
+    list_of_categories = db.relationship('Category', lazy='dynamic')
 
 class Category(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable = False)
-    tournament = db.relationship('Tournament', back_populates='categories')
+    tournament = db.relationship('Tournament', back_populates='list_of_categories')
+
 
 
 class Judge(db.Model):

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/styleadmindash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
+<body class="admin-body">
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="">
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('admin') }}" class="active">
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="{{ url_for('tournaments_admin') }}">
+                    <span class="material-symbols-sharp">diversity_2</span>
+                    <h3>Torneios</h3>
+                </a>
+
+                <a href="{{ url_for('categories_admin') }}" >
+                    <span class="material-symbols-sharp">category</span>
+                    <h3>Categorias</h3>
+                </a>
+
+                <a href="{{ url_for('athletes_admin') }}">
+                    <span class="material-symbols-sharp">sports_martial_arts</span>
+                    <h3>Competidores</h3>
+                </a>
+
+                <a href="{{ url_for('judges_admin') }}">
+                    <span class="material-symbols-sharp">gavel</span>
+                    <h3>Arbitros</h3>
+                </a>
+
+                <a href="{{ url_for('users_admin') }}">
+                    <span class="material-symbols-sharp">person</span>
+                    <h3>Utilizadores</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            
+        </aside>
+
+        <main>
+            <div class="title">
+                <h2>DashBoard</h2>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress tournaments-circle">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <h2>5</h2>
+                        <h3>Torneios</h3>
+                    </div>
+                </div>
+
+                <div class="progress categories-circle">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <h2>20</h2>
+                        <h3>Categorias</h3>
+                    </div>
+                </div>
+
+                <div class="progress judges-circle">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <h2>15</h2>
+                        <h3>Arbitros</h3>
+                    </div>
+                </div>
+
+                <div class="progress users-circle">
+                    <svg>
+                        <circle cx="38" cy="38" r="36"></circle>
+                    </svg>
+                    <div class="number">
+                        <h2>52</h2>
+                        <h3>Utilizadores</h3>
+                    </div>
+                </div>
+            </div>
+
+            {% for tournament in tournaments %}
+            <div class="torneios-categorias">
+                <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
+                    <h3>{{ tournament.name }}</h3>
+                    <span class="material-symbols-sharp">expand_more</span>
+                </button>
+               
+                
+                <div class="categorias" id="{{ tournament.name }}">
+                    {% if tournaments.list_of_categories|length != 0 %} 
+                        {% for category in tournament.list_of_categories %}
+                        <div class="categoria-item">
+                            <h3>{{ category.name }}</h3>
+                            <small class="text-muted">{{ category.list_of_athletes|length }}</small>
+                            <div class="options">
+                                <a href="" class="delete">
+                                    <span class="material-symbols-sharp">delete</span>
+                                </a>
+                                <a href="" class="edit">
+                                    <span class="material-symbols-sharp">edit</span>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="categoria-item add-categoria">
+                        <a onclick="show_popup('bg-popup-category')">
+                            <span class="material-symbols-sharp">add</span>
+                            <h4>Adicionar Categoria</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+
+
+        </main>
+    </div>
+    <script>
+            function show_hide(divId) {
+            var click = document.getElementById(divId);
+            if (click.style.display === "none") {
+                click.style.display = "grid";
+            } else {
+                click.style.display = "none";
+            }
+            }
+
+
+            function show_popup(divId, tournamentId) {
+            var click = document.getElementById(divId);
+            console.log("Tournament ID:", tournamentId);
+            click.style.display = "flex";
+            }
+
+            function hide_popup(divId) {
+            var click = document.getElementById(divId);
+            click.style.display = "none";
+            }
+
+    </script>
+    </body>
+    </html>

@@ -73,7 +73,7 @@ def logout():
 @login_required
 def admin():
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard_admin.html")
+        return render_template("dashboard.html")
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -113,8 +113,6 @@ def categories_admin():
         name = form.name.data
         tournament = form.tournament.data
         tournament_id = tournament.id
-        if Category.query.filter_by(name=name).first():
-            return 'Category already exists'
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
 
 

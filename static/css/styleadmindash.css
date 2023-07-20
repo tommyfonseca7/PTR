@@ -555,3 +555,60 @@ select {
 }
 
 
+/* DASHBOARD */
+
+main .progress-item{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 2rem;
+    position: relative;
+    left: 5rem;
+}
+
+
+main .progress {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    
+}
+
+main .progress svg {
+    width: 7rem;
+    height: 7rem;
+}
+
+main .progress svg circle {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transform: translate(5px, 5px);
+    stroke-dasharray: 200;
+    stroke-dashoffset: -30;
+}
+
+main .tournaments-circle svg circle{
+    stroke: var(--color-primary-variant);
+    stroke-dasharray: 100;
+    stroke-dashoffset: -30;
+}
+
+main .categories-circle svg circle{
+    stroke: var(--color-danger);
+    stroke-dasharray: 150;
+    stroke-dashoffset: -30;
+}
+
+main .judges-circle svg circle{
+    stroke: var(--color-primary-variant);
+    stroke-dasharray: 180;
+    stroke-dashoffset: -30;
+}
+
+main .users-circle svg circle{
+    stroke: var(--color-danger);
+    stroke-dasharray: 200;
+    stroke-dashoffset: -30;
+}
+
