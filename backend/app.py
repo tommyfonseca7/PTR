@@ -73,8 +73,9 @@ def logout():
 @login_required
 def admin():
     tournaments = Tournament.query.all()
+    categories = Category.query.all()
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard.html", tournaments=tournaments)
+        return render_template("dashboard.html", tournaments=tournaments, categories=categories)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -108,6 +109,7 @@ def tournaments_admin():
 def categories_admin():
     form = CategoryForm()
     tournaments = Tournament.query.all()
+    categories= Category.query.all()
 
 
     if form.validate_on_submit():
@@ -118,7 +120,7 @@ def categories_admin():
 
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
-        return render_template("categories_admin.html", form=form, tournaments=tournaments)
+        return render_template("categories_admin.html", form=form, tournaments=tournaments, categories=categories)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
