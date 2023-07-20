@@ -393,6 +393,7 @@ main .torneios-categorias {
 }
 
 main .torneios-categorias button {
+    background: var(--color-white);
     padding: 1rem;
     display: flex;
     border-radius: var(--borrder-radius-2);

@@ -259,25 +259,12 @@ form {
     
   }
 
-  button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-left: 75%;
-    cursor: pointer;
-  }
-
   .alert{
     width: 300px;
     height: 50px;
     background-color: var(--color-primary);
     color: white;
-    margin: 0 auto;
+    margin: 2rem auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -370,3 +357,52 @@ main .grades div:nth-last-child(-n+3) {
     left: -35px;
     content: "✖";
   }
+
+
+  /* PROVAS */
+
+  main .torneios-categorias {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+main .torneios-categorias button {
+    padding: 1rem;
+    display: flex;
+    border-radius: var(--borrder-radius-2);
+    color: var(--color-dark);
+    background: var(--color-white);
+}
+
+main .torneios-categorias button span{
+    position: absolute;
+    right: 4rem;
+}
+
+.categorias{
+    display: none;
+    position: relative;
+    grid-template-columns: repeat(5,1fr);
+    gap: 1.6rem;
+}
+
+.categorias > div {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-readius);
+    margin: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.8rem;
+}
+
+.options a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}

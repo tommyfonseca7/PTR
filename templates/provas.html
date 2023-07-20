@@ -1,13 +1,56 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTR</title>
+    <link rel="stylesheet" href="../static/css/styleFront.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
 
-{% block content %}
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <a href="{{ url_for('index')}}"><img src="..\static\images\logo.png" alt=""></a>
+            </div>
+            <nav>
+                <a href="{{ url_for('provas') }}">Provas</a>
+                <a href="{{ url_for('login')}}">Login<span class="material-symbols-sharp">login</span></a>
+            </nav>
+        </header>
 
-{% for category in category %}
-{% for tournaments in tournaments %}
-<tr>
-  <h1><td>{{ category.name }}</td></h1>
-    <td>Torneio a decorrer {{tournaments.name}}</td>
-</tr>
-{% endfor %}
-{% endfor %}
-{% endblock%}
+        <main>
+          {% for tournament in tournaments %}
+          <div class="torneios-categorias">
+              <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
+                  <h3>{{ tournament.name }}</h3>
+                  <span class="material-symbols-sharp">expand_more</span>
+              </button>
+             
+              
+              <div class="categorias" id="{{ tournament.name }}">
+                      {% for categories in categories %}
+                      {% if categories.tournament_id == tournament.id %}
+                      <div class="categoria-item">
+                          <h3>{{ categories.name }}</h3>
+                          <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
+                          <div class="options">
+                              <a href="" class="more">
+                                  <span class="material-symbols-sharp">add</span>
+                                  <h4>Ver mais</h4>
+                                </a>
+                          </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+              </div>
+          </div>
+          {% endfor %}
+        </main>
+
+    </div>
+    
+</body>
+<script src="../static/script.js"></script>
+</html>

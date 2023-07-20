@@ -184,8 +184,8 @@ def get_users():
 @app.route("/provas" , methods = ['GET'])
 def provas():
     tournaments = Tournament.query.all()
-    category = Category.query.all()
-    return render_template('provas.html', tournaments=tournaments, category=category)
+    categories = Category.query.all()
+    return render_template('provas.html', tournaments=tournaments, categories=categories)
 
 @app.route("/poomsae_athlete", methods = ['GET']) 
 def poomsaes_athlete():
