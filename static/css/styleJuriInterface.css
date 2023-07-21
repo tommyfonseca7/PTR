@@ -323,4 +323,3 @@ main .tab{
 input[type="radio"]:checked + label{
     border: 2px solid white;
 }
-

@@ -64,13 +64,22 @@
                 <h1>Arbitros</h1>
             </div>
             <div class="arbitros">
-                {% for judge in judges %}
+                {% for judges in judges %}
                 <div class="arbitro-item">
-                    <h3>{{ judge.type_of_jury }}</h3>
-                    <h5>{{ judge.category }}</h3>
-                    <small class="text-muted">{{ judge.tournament }}</small>
+                    <h3>Nome Real: {{ judges.user.real_name }}</h3>
+                    <h4>Tipo de Juri{{ judges.type_of_jury }}</h4>
+                    {% for categories in categories%}
+                    {% if categories.id == judges.category_id%}
+                    <h5>Categoria : {{ categories.name }}</h3>
+                    {%endif%}
+                    {%endfor%}
+                    {%for tournaments in tournaments%}
+                    {% if tournaments.id == judges.tournament_id%}
+                    <small class="text-muted">Torneio : {{ tournaments.name }}</small>
+                    {%endif%}
+                    {%endfor%}
                     <div class="options">
-                        <a href="" class="delete">
+                        <a href="{{ url_for('delete_judge', id=judges.id) }}" class="delete">
                             <span class="material-symbols-sharp">delete</span>
                         </a>
                         <a href="" class="edit">
@@ -79,7 +88,8 @@
                     </div>
                 </div>
                 {% endfor %}
-        
+                
+
                 <div class="arbitro-item">
                     <h3>Tipo de Arbitro</h3>
                     <h5>Categoria</h3>
@@ -110,6 +120,23 @@
                     </a>
                     <h2>Adicionar Arbitro</h2>
                     <form action="" method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {{ form.username.label }}
+                        {{ form.username() }}
+
+                        {{ form.real_name.label }}
+                        {{ form.real_name() }}
+
+                        {{ form.password_hash.label }}
+                        {{ form.password_hash() }}
+
+                        {{ form.password_hash2.label }}
+                        {{ form.password_hash2() }}
+
+                        {{ form.type_of_jury.label }}
+                        {{ form.type_of_jury() }}
+
                         {{ form.tournament.label}}
                         {{ form.tournament(**{"hx-get" : "/get_categories", "hx-target" : "#category"}) }}
 

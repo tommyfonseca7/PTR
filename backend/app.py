@@ -78,8 +78,10 @@ def logout():
 @app.route("/admin", methods = ['GET', 'POST'])
 @login_required
 def admin():
+    tournaments = Tournament.query.all()
+    categories = Category.query.all()
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard.html")
+        return render_template("dashboard.html", tournaments=tournaments, categories=categories)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -124,7 +126,6 @@ def categories_admin():
         tournament_id = tournament.id
         
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
-        add_instance(Athlete, name=name, category_id = 1, tournament_id = tournament_id, active = False)
 
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
@@ -175,11 +176,33 @@ def athletes_admin():
 @app.route("/admin/judges", methods = ['GET', 'POST'])
 @login_required
 def judges_admin():
+    
+    tournaments = Tournament.query.all()
+    categories = Category.query.all()
+    judges = Judge.query.all()
     form = JudgeForm()
-    form.category.query = Category.query.filter(None).all()
+    
+    if request.method == "POST":
+            app.logger.debug('Received a POST request!')
+            flash("Form is validated!")  # Add this flash message for debugging purposes
+            user = Users.query.filter_by(username = form.username.data).first()
+            username = form.username.data
+            real_name = form.real_name.data
+            hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
+            type_of_jury = form.type_of_jury.data
+            category = form.category.data
+            tournament = form.tournament.data
+            category_id = category.id
+            tournament_id = tournament.id
+            if user is None:
+                add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'Judge')
+            user = Users.query.filter_by(username = form.username.data).first()
+            add_instance(Judge, user = user, id = user.id, category_id = category_id, tournament_id = tournament_id, type_of_jury = type_of_jury)
+            flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+    
 
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("judges_admin.html", form=form)
+        return render_template("judges_admin.html", form=form, tournaments = tournaments, categories = categories, judges = judges)
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -194,11 +217,20 @@ def get_categories():
 @app.route("/admin/users", methods = ['GET', 'POST'])
 @login_required
 def users_admin():
-
+    form = UserForm()
+    users = Users.query.all()
     
-    
+    if request.method == "POST":
+        app.logger.debug('Received a POST request!')
+        flash("Form is validated!")  # Add this flash message for debugging purposes
+        username = form.username.data
+        real_name = form.real_name.data
+        hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
+        add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'Judge')
+        add_instance(Users, username = username, real_name = real)
+            
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("users_admin.html")
+        return render_template("users_admin.html", form = form, users = users)
     else:
         flash("You are not an admin!")
         return render_template("index.html")       
@@ -361,6 +393,19 @@ def delete_user(id):
         delete_instance(user_to_delete)
         flash("User deleted sucessfully!")
         return redirect(url_for('create_user'))
+    except: 
+        flash("There was a prbolem deleting user, try again!")
+        return redirect(url_for('get_users'))
+    
+@app.route('/delete_judge/<int:id>')
+def delete_judge(id):
+    judge_to_delete = Judge.query.get_or_404(id)
+    user_to_delete = Users.query.get_or_404(id)
+    try:
+        delete_instance(judge_to_delete, id)
+        delete_instance(user_to_delete, id)
+        flash("Judge deleted sucessfully!")
+        return redirect(url_for('judges_admin'))
     except: 
         flash("There was a prbolem deleting user, try again!")
         return redirect(url_for('get_users'))
@@ -584,9 +629,7 @@ def judgeInterface():
 
 class UserType(Enum):
     user = 'user'
-    jury = 'jury'
     admin = 'admin'
-    athlete = 'athlete'
     
 
 
@@ -604,7 +647,7 @@ class UserForm(FlaskForm):
 class JudgeForm(UserForm):
     type_of_jury = SelectField('Type of Jury', choices=[('normal', 'Normal'), ('major', 'Major')], default='normal')
     tournament = QuerySelectField('Tournament', query_factory=lambda: Tournament.query.all(), allow_blank = True, get_label = "name")
-    category = QuerySelectField('Category', get_label= "name", allow_blank = True)
+    category = QuerySelectField('Category', query_factory=lambda: Category.query.all(), allow_blank = True, get_label = "name")
     submit = SubmitField('Submit')
 
 class AthleteForm(UserForm):

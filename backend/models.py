@@ -13,7 +13,7 @@ class Users(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username  = db.Column(db.String(200), nullable=False, unique=True)
-    real_name = db.Column(db.String(200), nullable=False, unique=True)
+    real_name = db.Column(db.String(200), nullable=False, unique=False)
     password_hash = db.Column(db.String(128))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     user_type = db.Column(db.Enum('user', 'judge', 'admin', 'superadmin', 'athlete'), default='user')
@@ -39,7 +39,8 @@ class Judge(db.Model):
     __tablename__ = 'judge'
     id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, primary_key=True)
     user = db.relationship('Users', backref=db.backref('judge', uselist=False))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=False)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), unique=False)
     type_of_jury = db.Column(db.Enum('major', 'normal', default = 'normal'))
 
 

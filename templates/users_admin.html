@@ -60,88 +60,47 @@
 
         <main>
             <div class="categoria-container">
-                <h1>Categoria DAN SUB-30 M</h1>
+                <h1>Utilizadores</h1>
                 <a href="" class="edit">
                     <span class="material-symbols-sharp">edit</span>
                 </a>
             </div>
-            <h2>Competidores</h2>
+            <h2>Utilizadores</h2>
             <div class="competidores">
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
                 
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
-                <div class="competidor-item">
-                    <h3>Nome do Atleta</h3>
-                    <h5>DAN SUB-30 M</h3>
-                    <small class="text-muted">Nome do Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
                 
-                <div class="competidor-item add-competidor">
-                    <a href="">
+                <div class="competidor-item add-arbitro" onclick="show_popup('bg-arbitro-add')">
+                    <a>
                         <span class="material-symbols-sharp">add</span>
-                        <h4>Adicionar Atleta</h4>
+                        <h4>Adicionar Utilizador</h4>
                     </a>
+                </div>
+            </div>
+
+            <div class="bg-popup" id="bg-arbitro-add">
+                <div class="add-torneio-poppup" id="add-torneio">
+                    <a id="close-btn-torneio" onclick="hide_popup('bg-arbitro-add')">
+                        <span class="material-symbols-sharp">close</span>
+                    </a>
+                    <h2>Adicionar Arbitro</h2>
+                    <form action="" method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {{ form.username.label }}
+                        {{ form.username() }}
+
+                        {{ form.real_name.label }}
+                        {{ form.real_name() }}
+
+                        {{ form.password_hash.label }}
+                        {{ form.password_hash() }}
+
+                        {{ form.password_hash2.label }}
+                        {{ form.password_hash2() }}
+
+
+                       {{ form.submit() }}
+                    </form>
                 </div>
             </div>
         
@@ -150,6 +109,6 @@
     </div>
     
 
-    <script src="../static/scripts/script.js"></script>
+    <script src="..\static\script.js"></script>
     </body>
     </html>
