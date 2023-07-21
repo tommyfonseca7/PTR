@@ -14,3 +14,80 @@
 2023-07-21 00:03:12,593 - DEBUG - Received a POST request!
 2023-07-21 00:03:27,894 - DEBUG - Received a POST request!
 2023-07-21 00:11:44,996 - DEBUG - Received a POST request!
+2023-07-21 09:57:55,955 - DEBUG - Received a POST request!
+2023-07-21 09:57:58,367 - DEBUG - Received a POST request!
+2023-07-21 10:04:04,751 - DEBUG - Received a POST request!
+2023-07-21 10:15:26,445 - DEBUG - Received a POST request!
+2023-07-21 10:16:55,895 - DEBUG - Received a POST request!
+2023-07-21 11:37:27,806 - DEBUG - Received a POST request!
+2023-07-21 12:00:11,784 - DEBUG - Received a POST request!
+2023-07-21 12:11:28,887 - DEBUG - Received a POST request!
+2023-07-21 15:37:18,522 - DEBUG - Received a POST request!
+2023-07-21 15:54:08,876 - DEBUG - Received a POST request!
+2023-07-21 15:57:53,293 - DEBUG - Received a POST request!
+2023-07-21 15:58:24,181 - DEBUG - Received a POST request!
+2023-07-21 16:33:04,545 - DEBUG - Received a POST request!
+2023-07-21 16:33:30,520 - DEBUG - Received a POST request!
+2023-07-21 16:33:36,808 - DEBUG - Received a POST request!
+2023-07-21 16:33:41,025 - DEBUG - Received a POST request!
+2023-07-21 16:33:42,762 - DEBUG - Received a POST request!
+2023-07-21 16:33:58,537 - DEBUG - Received a POST request!
+2023-07-21 16:34:08,061 - DEBUG - Received a POST request!
+2023-07-21 16:37:03,889 - DEBUG - Received a POST request!
+2023-07-21 16:37:14,601 - DEBUG - Received a POST request!
+2023-07-21 16:37:40,912 - DEBUG - Received a POST request!
+2023-07-21 16:37:43,047 - DEBUG - Received a POST request!
+2023-07-21 16:38:05,579 - DEBUG - Received a POST request!
+2023-07-21 18:03:23,471 - DEBUG - Received a POST request!
+2023-07-21 18:03:32,754 - DEBUG - Received a POST request!
+2023-07-21 19:46:30,948 - DEBUG - Received a POST request!
+2023-07-21 19:46:35,818 - DEBUG - Received a POST request!
+2023-07-21 19:46:49,662 - DEBUG - Received a POST request!
+2023-07-21 19:46:52,670 - DEBUG - Received a POST request!
+2023-07-21 19:46:54,488 - DEBUG - Received a POST request!
+2023-07-21 19:46:58,051 - DEBUG - Received a POST request!
+2023-07-21 19:48:31,519 - DEBUG - Received a POST request!
+2023-07-21 19:52:20,275 - DEBUG - <Athlete 1>
+2023-07-21 19:52:20,276 - DEBUG - 1
+2023-07-21 19:52:20,277 - DEBUG - 1
+2023-07-21 19:52:20,281 - DEBUG - tournament1
+2023-07-21 19:56:44,884 - DEBUG - <Athlete 1>
+2023-07-21 19:56:44,884 - DEBUG - 1
+2023-07-21 19:56:44,885 - DEBUG - 1
+2023-07-21 19:56:44,887 - DEBUG - tournament1
+2023-07-21 19:56:48,039 - DEBUG - 1
+2023-07-21 19:56:48,040 - DEBUG - 1
+2023-07-21 19:56:48,040 - DEBUG - 1
+2023-07-21 19:56:48,063 - DEBUG - <Tournament 1>
+2023-07-21 19:56:48,073 - DEBUG - herev2
+2023-07-21 19:56:49,525 - DEBUG - 1
+2023-07-21 19:56:49,526 - DEBUG - 1
+2023-07-21 19:56:49,526 - DEBUG - 3
+2023-07-21 19:56:49,539 - DEBUG - <Tournament 1>
+2023-07-21 19:56:49,544 - DEBUG - here
+2023-07-21 20:20:20,948 - DEBUG - <Athlete 1>
+2023-07-21 20:20:20,949 - DEBUG - 1
+2023-07-21 20:20:20,950 - DEBUG - 1
+2023-07-21 20:20:20,955 - DEBUG - tournament1
+2023-07-21 20:20:23,924 - DEBUG - 1
+2023-07-21 20:20:23,925 - DEBUG - 1
+2023-07-21 20:20:23,925 - DEBUG - 1
+2023-07-21 20:20:23,944 - DEBUG - <Tournament 1>
+2023-07-21 20:20:23,954 - DEBUG - herev2
+2023-07-21 20:20:47,416 - DEBUG - <Athlete 1>
+2023-07-21 20:20:47,417 - DEBUG - 1
+2023-07-21 20:20:47,417 - DEBUG - 1
+2023-07-21 20:20:47,421 - DEBUG - tournament1
+2023-07-21 20:20:49,828 - DEBUG - 1
+2023-07-21 20:20:49,829 - DEBUG - 1
+2023-07-21 20:20:49,830 - DEBUG - 1
+2023-07-21 20:20:49,848 - DEBUG - <Tournament 1>
+2023-07-21 20:20:49,860 - DEBUG - herev2
+2023-07-21 20:20:51,935 - DEBUG - 1
+2023-07-21 20:20:51,936 - DEBUG - 1
+2023-07-21 20:20:51,937 - DEBUG - 3
+2023-07-21 20:20:51,956 - DEBUG - <Tournament 1>
+2023-07-21 20:20:51,972 - DEBUG - here
+2023-07-21 20:32:20,007 - DEBUG - Received a POST request!
+2023-07-21 21:02:13,720 - DEBUG - Received a POST request!
+2023-07-21 21:02:25,094 - DEBUG - Received a POST request!

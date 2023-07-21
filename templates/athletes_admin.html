@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} PTR {% endblock %}</title>
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.png">
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
 </head>
@@ -37,7 +38,7 @@
 
                 <a href="{{ url_for('athletes_admin') }}" class="active">
                     <span class="material-symbols-sharp">sports_martial_arts</span>
-                    <h3>Competidores</h3>
+                    <h3>Atletas</h3>
                 </a>
 
                 <a href="{{ url_for('judges_admin') }}">
@@ -59,7 +60,7 @@
         </aside>
         
         <main>
-            <h1>Competidores</h1>
+            <h1>Atletas</h1>
             <div class="competidores">
 
                 {% for athlete in athlete %}
@@ -71,16 +72,13 @@
                     {% endif %}
                     {% endfor %}
                     {% for tournament in tournament %}
-                    {% if athlete.tournament_id == tournament.id%}
-                    <small class="text-muted">{{tournament.name}}</small>
-                    {% endif %}
+                        {% if athlete.tournament_id == tournament.id%}
+                        <small class="text-muted">{{tournament.name}}</small>
+                        {% endif %}
                     {% endfor %}
                     <div class="options">
                         <a href="{{ url_for('delete_athlete', athlete_id=athlete.id) }}" class="delete">
                             <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
                         </a>
                     </div>
                 </div>
@@ -97,10 +95,11 @@
 
             <div class="bg-popup" id="bg-add-competitor">
                 <div class="add-competitor-poppup" id="add-competitor">
+                    <h2>Adicionar Atleta</h2>
+
                     <a id="close-btn-competitor" onclick="hide_popup('bg-add-competitor')">
                         <span class="material-symbols-sharp">close</span>
                     </a>
-                    <h2>Adicionar Atleta</h2>
                     <form action="" method="post">
                         
                         {{ form.hidden_tag() }}

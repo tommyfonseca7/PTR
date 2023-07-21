@@ -1,61 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PTR</title>
-    <link rel="stylesheet" href="../static/css/styleFront.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
-</head>
+{% extends 'base-new.html' %}
+{% block title %}{% endblock %}
+
+{% block content%}
 
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <a href="{{ url_for('index')}}"><img src="..\static\images\logo.png" alt=""></a>
-            </div>
-            <nav>
-                <a href="{{ url_for('provas') }}">Provas</a>
-                <a href="{{ url_for('login')}}">Login<span class="material-symbols-sharp">login</span></a>
-            </nav>
-        </header>
+
 
         <main>
-            <h1>Categoria - Nome da categoria</h1>
+            <h1>Categoria - {{ prova.name }}</h1>
             <table class="content-table">
                 <thead>
                     <tr>
                         <th>Lugar</th>
                         <th>Nome</th>
-                        <th>Apresentação Poomsae 1</th>
-                        <th>Tecnica Poomsae 1</th>
-                        <th>Média Poomsae 1</th>
-                        <th>Apresentação Poomsae 2</th>
-                        <th>Tecnica Poomsae 2</th>
-                        <th>Média Poomsae 2</th>
+                        <th>Apresentação Poomsae</th>
+                        <th>Tecnica Poomsae</th>
+                        <th>Média Poomsae</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for athlete in athletes %}
                     <tr>
-                        <th>1</th>
-                        <th>Joao Costa</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
+                        <th>{{ athlete.rank }}</th>
+                        <th>{{ athlete.name }}</th>
+                        <th>{{ athlete.list_of_poomsaes[0].presentation_component }}</th>
+                        <th>{{ athlete.list_of_poomsaes[0].technical_component }}</th>
+                        <th>{{ athlete.poomsae_median }}</th>
                     </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Joao Costa</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </main>
@@ -65,3 +38,5 @@
 </body>
 <script src="../static/script.js"></script>
 </html>
+
+{% endblock %}

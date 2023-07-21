@@ -124,39 +124,69 @@ document.getElementById("button-submit-juri").addEventListener('click', function
   // Extract the score from the form
   var athleteName = document.getElementById("athlete_name").textContent;
   var tournamentId = document.getElementById("tournament_id").value;
+  var judgeId = document.getElementById("judge_id").value;
+  var categoryId = document.getElementById("category_id").value;
+  var athleteId = document.getElementById("athlete_id").value;
   var sAndVValue = document.getElementById("sAndVValue").textContent;
   var rAndCValue = document.getElementById("rAndCValue").textContent;
   var eAndEValue = document.getElementById("eAndEValue").textContent;
   var comptResult = document.getElementById("compt-result").textContent;
 
   var formData = {
-    name: athleteName,
-    tournament_id: tournamentId,
-    strength_and_velocity: sAndVValue,
-    rhythm_and_coordination: rAndCValue,
-    energy_expression: eAndEValue,
-    technical_component: comptResult
+      name: athleteName,
+      tournament_id: tournamentId,
+      category_id: categoryId,
+      athlete_id: athleteId,
+      strength_and_velocity: sAndVValue,
+      rhythm_and_coordination: rAndCValue,
+      energy_expression: eAndEValue,
+      technical_component: comptResult
   };
-  fetch("/juri_interface", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(formData)
+
+  // Send the form data to the server using the fetch API
+  fetch(`/${judgeId}/juri_interface`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
   })
   .then(function (response) {
-    if (response.ok) {
-        console.log('Results saved successfully');
-        // Perform any additional actions or show a success message
-    } else {
-        console.error('Failed to save results');
-        // Handle the error case
+      if (response.ok) {
+          return response.json(); // Parse the response body as JSON
+      } else {
+          throw new Error("Failed to save results"); // Throw an error if the response is not OK
+      }
+  })
+  .then(function (data) {
+      // Handle the response data returned by the server
+      if (data.next_athlete_name) {
+          // If there's a next athlete, update the athlete name and tournament name
+          var athleteNameElement = document.getElementById('athlete_name');
+          var tournamentNameElement = document.getElementById('tournament_name');
+          var tournamentIdElement = document.getElementById("tournament_id");
+          var categoryIdElement = document.getElementById("category_id");
+          var athleteIdElement = document.getElementById("athlete_id");
+          athleteNameElement.textContent = data.next_athlete_name;
+          tournamentNameElement.textContent = data.tournament_name;
+          tournamentIdElement.textContent = data.tournamentIdElement;
+          categoryIdElement.textContent = data.categoryIdElement;
+          athleteIdElement.textContent = data.athlete_id;
+          document.getElementById("athlete_id").value = data.athlete_id;
+          // You can also display a message to indicate that the form was successfully submitted
+          alert("Form submitted successfully. Moving to the next athlete.");
+      }
+      else {
+        // If there's no next athlete, it means the tournament is finished
+        alert("Tournament finished. Returning to the lobby.");
+        window.location.href = "/lobby"; // Redirect to the lobby page
     }
-})
-.catch(function (error) {
-    console.error('Error:', error);
-    // Handle any network or server errors
-});
+  })
+  .catch(function (error) {
+      // Handle any errors that occur during form submission
+      console.error('Error:', error);
+      alert("An error occurred during form submission. Please try again.");
+  });
 });
 
 function show_hide(divId) {

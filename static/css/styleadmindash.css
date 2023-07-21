@@ -615,9 +615,32 @@ main .users-circle svg circle{
 
 main .torneios-ativos {
     margin: 10rem 0;
-<<<<<<< HEAD
-}
-=======
 }
 
->>>>>>> 261e40ab2c2b9fbdffc91a5234bc9e7a493cf4f6
+.add-competitor-poppup{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    background: var(--color-white);
+    text-align: center;
+    padding: 20px;
+}
+
+.add-competitor-poppup a{
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    cursor: pointer;
+}
+
+.add-competitor-poppup h2 {
+    position: absolute;
+    top: 2rem;
+}
+
+.add-competitor-poppup form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+}

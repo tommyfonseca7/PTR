@@ -1,24 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PTR</title>
-    <link rel="stylesheet" href="../static/css/styleFront.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
-</head>
+{% extends 'base-new.html' %}
+{% block title %}{% endblock %}
 
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <a href="{{ url_for('index')}}"><img src="..\static\images\logo.png" alt=""></a>
-            </div>
-            <nav>
-                <a href="{{ url_for('provas') }}">Provas</a>
-                <a href="{{ url_for('login')}}">Login<span class="material-symbols-sharp">login</span></a>
-            </nav>
-        </header>
+{% block content%}
 
         <main>
             <div class="presentation">
@@ -29,12 +12,13 @@
                 <h2>Torneios Ativos</h2>
                 <div class="torneios">
                     <div class="torneio-item">
-                        <h3>Nome do Torneio</h3>
-                        <small class="text-muted">08/07/2023</small>
-                        <h5>7 Categorias</h3>
-                        <div class="options">
+                        {% for tournament in tournaments %}
+                        <div class="torneio-item">
+                            <h3>{{ tournament.name }}</h3>
+                            <small class="text-muted">08/07/2023</small>
+                            <h5 id="tournament_id">Lista de Categorias: {{ tournament.list_of_categories.count() }}</h5>
                         </div>
-                    </div>
+                        {%endfor%}
                 </div>
             </div>
         </main>
@@ -43,3 +27,4 @@
     
 </body>
 </html>
+{% endblock %}

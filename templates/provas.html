@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PTR</title>
-    <link rel="stylesheet" href="../static/css/styleFront.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
-</head>
+{% extends 'base-new.html' %}
+{% block title %}{% endblock %}
+
+{% block content%}
+
 
 <body>
     <div class="container">
-        <header>
-            <div class="logo">
-                <a href="{{ url_for('index')}}"><img src="..\static\images\logo.png" alt=""></a>
-            </div>
-            <nav>
-                <a href="{{ url_for('provas') }}">Provas</a>
-                <a href="{{ url_for('login')}}">Login<span class="material-symbols-sharp">login</span></a>
-            </nav>
-        </header>
 
         <main>
           {% for tournament in tournaments %}
@@ -34,9 +21,9 @@
                       {% if categories.tournament_id == tournament.id %}
                       <div class="categoria-item">
                           <h3>{{ categories.name }}</h3>
-                          <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
+                          <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
                           <div class="options">
-                              <a href="" class="more">
+                              <a href="{{ url_for('provas_by_id', id=categories.id) }}" class="more">
                                   <span class="material-symbols-sharp">add</span>
                                   <h4>Ver mais</h4>
                                 </a>
@@ -54,3 +41,5 @@
 </body>
 <script src="../static/script.js"></script>
 </html>
+
+{% endblock %}

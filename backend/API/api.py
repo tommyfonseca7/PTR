@@ -201,8 +201,6 @@ def get_tournaments():
             'id': tournament.id,
             'name': tournament.name,
             'active': tournament.active,
-            'list_of_judges': [judge.id for judge in tournament.list_of_judges],
-            'list_of_athletes': [athlete.id for athlete in tournament.list_of_athletes.all()]
         }
         tournament_list.append(tournament_data)
     return jsonify(tournament_list)

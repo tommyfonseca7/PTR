@@ -1,221 +1,246 @@
-{% extends 'base_without_headers.html' %}
-{% block title %}PTR - DashBoard{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR {% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/styleJuriInterface.css">
+</head>
+<body>
+    <div class="container">
+        <header class="juri-header">
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="" srcset="" class="middle-top-logo">
+            </div>
+        </header>
 
+        <main>
+            <div class="title">
+                <h2 class="title">A avaliar: 🇵🇹 <i id = "athlete_name">{{active_athlete.name}}</i> - <i id = "tournament_name">{{active_tournament.name}} <i id = "tournament_name">{{active_category.name}}</i></h2>
+                <input type="hidden" id="tournament_id" value="{{ request.args.get('tournament_id') }}">
+                <input type="hidden" id="category_id" value="{{ request.args.get('category_id') }}">
+                <input type="hidden" id="judge_id" value="{{ current_user.id }}">
+                <input type="hidden" id="athlete_id" value="{{ active_athlete.id }}">
+            </div>
+            <div class="submit">
+                <button id = "button-submit-juri" class="button-submit-juri">Submit</button>
+            </div>
+            
+            
+            <div class="compt-cancel">
+                <button class="button-cancel-reduce-tree" onclick="cancelReduceBy0_3()">
+                    <p>CANCEL -0.3</p>
+                </button>
+                <button class="button-reset-score" onclick="resetResult()">
+                    <p>RESET</p>
+                </button>
+                <button class="button-cancel-reduce-one" onclick="cancelReduceBy0_1()">
+                    <p>CANCEL -0.1</p>
+                </button>
+            </div>
+            
+            <div class="compt">
+                <button class="button-reduce-tree" onclick="reduceBy0_3()">
+                    <p>Retirar:</p>
+                    <h1>-0.3</h1>
+                </button>
+                <div class="compt-text">
+                    <p>Componente Técnica:</p>
+                    <h1 id="compt-result">4.0</h1>
+                </div>  
+                <button class="button-reduce-one" onclick="reduceBy0_1()">
+                    <p>Retirar:</p>
+                    <h1>-0.1</h1>
+                </button>
+            </div>
+            
+            
+            
+            <div class="apresentation-container">
+                <p>Força e Velocidade : </p>
+                <h1 id="sAndVValue">2.0</h1>
+            </div>
+            
+            <div class="slider-container">
+                <div class="tabs1">
+                    <input type="radio" name="tabs10" id="radio-1" value="2.0" checked>
+                    <label class="tab" for="radio-1">2.0</label>
+            
+                    <input type="radio" name="tabs10" id="radio-2" value="1.9">
+                    <label class="tab" for="radio-2">1.9</label>
+            
+                    <input type="radio" name="tabs10" id="radio-3" value="1.8">
+                    <label class="tab" for="radio-3">1.8</label>
+            
+                    <input type="radio" name="tabs10" id="radio-4" value="1.7">
+                    <label class="tab" for="radio-4">1.7</label>
+            
+                    <input type="radio" name="tabs10" id="radio-5" value="1.6">
+                    <label class="tab" for="radio-5">1.6</label>
+            
+                    <input type="radio" name="tabs10" id="radio-6" value="1.5">
+                    <label class="tab" for="radio-6">1.5</label>
+            
+                    <input type="radio" name="tabs10" id="radio-7" value="1.4">
+                    <label class="tab" for="radio-7">1.4</label>
+            
+                    <input type="radio" name="tabs10" id="radio-8" value="1.3">
+                    <label class="tab" for="radio-8">1.3</label>
+            
+                    <input type="radio" name="tabs10" id="radio-9" value="1.2">
+                    <label class="tab" for="radio-9">1.2</label>
+            
+                    <input type="radio" name="tabs10" id="radio-101" value="1.1">
+                    <label class="tab" for="radio-101">1.1</label>
+            
+                    <input type="radio" name="tabs10" id="radio-10" value="1.0">
+                    <label class="tab" for="radio-10">1.0</label>
+            
+                    <input type="radio" name="tabs10" id="radio-11" value="0.9">
+                    <label class="tab" for="radio-11">0.9</label>
+            
+                    <input type="radio" name="tabs10" id="radio-12" value="0.8" >
+                    <label class="tab" for="radio-12">0.8</label>
+            
+                    <input type="radio" name="tabs10" id="radio-13" value="0.7">
+                    <label class="tab" for="radio-13">0.7</label>
+            
+                    <input type="radio" name="tabs10" id="radio-14" value="0.6">
+                    <label class="tab" for="radio-14">0.6</label>
+            
+                    <input type="radio" name="tabs10" id="radio-15" value="0.5">
+                    <label class="tab" for="radio-15">0.5</label>
+                </div>
+            </div>
+            
+            <div class="apresentation-container">
+                <p>Ritmo e Coordenação : </p>
+                <h1 id="rAndCValue">2.0</h1>
+            </div>
+            
+            <div class="slider-container">
+                <div class="tabs2">
+                    <input type="radio" name="tabs20" id="2radio-1" value="2.0" checked>
+                    <label class="tab" for="2radio-1">2.0</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-2" value="1.9">
+                    <label class="tab" for="2radio-2">1.9</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-3" value="1.8">
+                    <label class="tab" for="2radio-3">1.8</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-4" value="1.7">
+                    <label class="tab" for="2radio-4">1.7</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-5" value="1.6">
+                    <label class="tab" for="2radio-5">1.6</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-6" value="1.5">
+                    <label class="tab" for="2radio-6">1.5</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-7" value="1.4">
+                    <label class="tab" for="2radio-7">1.4</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-8" value="1.3">
+                    <label class="tab" for="2radio-8">1.3</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-9" value="1.2">
+                    <label class="tab" for="2radio-9">1.2</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-9" value="1.1">
+                    <label class="tab" for="2radio-101">1.1</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-10"value="1.0" >
+                    <label class="tab" for="2radio-10">1.0</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-11"value="0.9" >
+                    <label class="tab" for="2radio-11">0.9</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-12"value="0.8" >
+                    <label class="tab" for="2radio-12">0.8</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-13"value="0.7" >
+                    <label class="tab" for="2radio-13">0.7</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-14"value="0.6" >
+                    <label class="tab" for="2radio-14">0.6</label>
+            
+                    <input type="radio" name="tabs20" id="2radio-15"value="0.5" >
+                    <label class="tab" for="2radio-15">0.5</label>
+                </div>
+            </div>
+            
+            <div class="apresentation-container">
+                <p>Expressão de Energia : </p>
+                <h1 id="eAndEValue">2.0</h1>
+            </div>
+            
+            <div class="slider-container">
+                <div class="tabs3">
+                    <input type="radio" name="tabs30" id="3radio-1" value="2.0" checked>
+                    <label class="tab" for="3radio-1">2.0</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-2" value="1.9" >
+                    <label class="tab" for="3radio-2">1.9</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-3" value="1.8" >
+                    <label class="tab" for="3radio-3">1.8</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-4" value="1.7" >
+                    <label class="tab" for="3radio-4">1.7</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-5" value="1.6" >
+                    <label class="tab" for="3radio-5">1.6</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-6" value="1.5" >
+                    <label class="tab" for="3radio-6">1.5</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-7" value="1.4" >
+                    <label class="tab" for="3radio-7">1.4</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-8" value="1.3" >
+                    <label class="tab" for="3radio-8">1.3</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-9" value="1.2" >
+                    <label class="tab" for="3radio-9">1.2</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-101" value="1.1" >
+                    <label class="tab" for="3radio-101">1.1</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-10" value="1.0" >
+                    <label class="tab" for="3radio-10">1.0</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-11" value="0.9" >
+                    <label class="tab" for="3radio-11">0.9</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-12" value="0.8" >
+                    <label class="tab" for="3radio-12">0.8</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-13" value="0.7" >
+                    <label class="tab" for="3radio-13">0.7</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-14" value="0.6" >
+                    <label class="tab" for="3radio-14">0.6</label>
+            
+                    <input type="radio" name="tabs30" id="3radio-15" value="0.5" >
+                    <label class="tab" for="3radio-15">0.5</label>
+                </div>
+            </div>
 
-{% block content%}
-<header class="juri-header">
-    <img src="/static/images/logo.png" alt="" srcset="" class="middle-top-logo">
-</header>
-   
+        </main>
 
-<h2 class="title">A avaliar: 🇵🇹 <i id = "athlete_name">{{active_athlete.name}}</i> - <i id = "tournament_name">{{tournament.name}}</i></h2>
-<input type="hidden" id="tournament_id" value="{{ tournament.id }}">
-
-<button id = "button-submit-juri" class="button-submit-juri">Submit</button>
-
-
-<div class="compt-cancel">
-    <button class="button-cancel-reduce-tree" onclick="cancelReduceBy0_3()">
-        <p>CANCEL -0.3</p>
-    </button>
-    <button class="button-reset-score" onclick="resetResult()">
-        <p>RESET</p>
-    </button>
-    <button class="button-cancel-reduce-one" onclick="cancelReduceBy0_1()">
-        <p>CANCEL -0.1</p>
-    </button>
-</div>
-
-<div class="compt">
-    <button class="button-reduce-tree" onclick="reduceBy0_3()">
-        <p>Retirar:</p>
-        <h1>-0.3</h1>
-    </button>
-    <div class="compt-text">
-        <p>Componente Técnica:</p>
-        <h1 id="compt-result">4.0</h1>
-    </div>  
-    <button class="button-reduce-one" onclick="reduceBy0_1()">
-        <p>Retirar:</p>
-        <h1>-0.1</h1>
-    </button>
-</div>
-
-
-
-<div class="apresentation-container">
-    <p>Força e Velocidade : </p>
-    <h1 id="sAndVValue">2.0</h1>
-</div>
-
-<div class="slider-container">
-    <div class="tabs1">
-        <input type="radio" name="tabs10" id="radio-1" value="2.0" checked>
-        <label class="tab" for="radio-1">2.0</label>
-
-        <input type="radio" name="tabs10" id="radio-2" value="1.9">
-        <label class="tab" for="radio-2">1.9</label>
-
-        <input type="radio" name="tabs10" id="radio-3" value="1.8">
-        <label class="tab" for="radio-3">1.8</label>
-
-        <input type="radio" name="tabs10" id="radio-4" value="1.7">
-        <label class="tab" for="radio-4">1.7</label>
-
-        <input type="radio" name="tabs10" id="radio-5" value="1.6">
-        <label class="tab" for="radio-5">1.6</label>
-
-        <input type="radio" name="tabs10" id="radio-6" value="1.5">
-        <label class="tab" for="radio-6">1.5</label>
-
-        <input type="radio" name="tabs10" id="radio-7" value="1.4">
-        <label class="tab" for="radio-7">1.4</label>
-
-        <input type="radio" name="tabs10" id="radio-8" value="1.3">
-        <label class="tab" for="radio-8">1.3</label>
-
-        <input type="radio" name="tabs10" id="radio-9" value="1.2">
-        <label class="tab" for="radio-9">1.2</label>
-
-        <input type="radio" name="tabs10" id="radio-101" value="1.1">
-        <label class="tab" for="radio-101">1.1</label>
-
-        <input type="radio" name="tabs10" id="radio-10" value="1.0">
-        <label class="tab" for="radio-10">1.0</label>
-
-        <input type="radio" name="tabs10" id="radio-11" value="0.9">
-        <label class="tab" for="radio-11">0.9</label>
-
-        <input type="radio" name="tabs10" id="radio-12" value="0.8" >
-        <label class="tab" for="radio-12">0.8</label>
-
-        <input type="radio" name="tabs10" id="radio-13" value="0.7">
-        <label class="tab" for="radio-13">0.7</label>
-
-        <input type="radio" name="tabs10" id="radio-14" value="0.6">
-        <label class="tab" for="radio-14">0.6</label>
-
-        <input type="radio" name="tabs10" id="radio-15" value="0.5">
-        <label class="tab" for="radio-15">0.5</label>
+        
+        
     </div>
-</div>
+    
+       
+    
+    
+    
+    
+<script src="..\static\script.js">
 
-<div class="apresentation-container">
-    <p>Ritmo e Coordenação : </p>
-    <h1 id="rAndCValue">2.0</h1>
-</div>
-
-<div class="slider-container">
-    <div class="tabs2">
-        <input type="radio" name="tabs20" id="2radio-1" value="2.0" checked>
-        <label class="tab" for="2radio-1">2.0</label>
-
-        <input type="radio" name="tabs20" id="2radio-2" value="1.9">
-        <label class="tab" for="2radio-2">1.9</label>
-
-        <input type="radio" name="tabs20" id="2radio-3" value="1.8">
-        <label class="tab" for="2radio-3">1.8</label>
-
-        <input type="radio" name="tabs20" id="2radio-4" value="1.7">
-        <label class="tab" for="2radio-4">1.7</label>
-
-        <input type="radio" name="tabs20" id="2radio-5" value="1.6">
-        <label class="tab" for="2radio-5">1.6</label>
-
-        <input type="radio" name="tabs20" id="2radio-6" value="1.5">
-        <label class="tab" for="2radio-6">1.5</label>
-
-        <input type="radio" name="tabs20" id="2radio-7" value="1.4">
-        <label class="tab" for="2radio-7">1.4</label>
-
-        <input type="radio" name="tabs20" id="2radio-8" value="1.3">
-        <label class="tab" for="2radio-8">1.3</label>
-
-        <input type="radio" name="tabs20" id="2radio-9" value="1.2">
-        <label class="tab" for="2radio-9">1.2</label>
-
-        <input type="radio" name="tabs20" id="2radio-9" value="1.1">
-        <label class="tab" for="2radio-101">1.1</label>
-
-        <input type="radio" name="tabs20" id="2radio-10"value="1.0" >
-        <label class="tab" for="2radio-10">1.0</label>
-
-        <input type="radio" name="tabs20" id="2radio-11"value="0.9" >
-        <label class="tab" for="2radio-11">0.9</label>
-
-        <input type="radio" name="tabs20" id="2radio-12"value="0.8" >
-        <label class="tab" for="2radio-12">0.8</label>
-
-        <input type="radio" name="tabs20" id="2radio-13"value="0.7" >
-        <label class="tab" for="2radio-13">0.7</label>
-
-        <input type="radio" name="tabs20" id="2radio-14"value="0.6" >
-        <label class="tab" for="2radio-14">0.6</label>
-
-        <input type="radio" name="tabs20" id="2radio-15"value="0.5" >
-        <label class="tab" for="2radio-15">0.5</label>
-    </div>
-</div>
-
-<div class="apresentation-container">
-    <p>Expressão de Energia : </p>
-    <h1 id="eAndEValue">2.0</h1>
-</div>
-
-<div class="slider-container">
-    <div class="tabs3">
-        <input type="radio" name="tabs30" id="3radio-1" value="2.0" checked>
-        <label class="tab" for="3radio-1">2.0</label>
-
-        <input type="radio" name="tabs30" id="3radio-2" value="1.9" >
-        <label class="tab" for="3radio-2">1.9</label>
-
-        <input type="radio" name="tabs30" id="3radio-3" value="1.8" >
-        <label class="tab" for="3radio-3">1.8</label>
-
-        <input type="radio" name="tabs30" id="3radio-4" value="1.7" >
-        <label class="tab" for="3radio-4">1.7</label>
-
-        <input type="radio" name="tabs30" id="3radio-5" value="1.6" >
-        <label class="tab" for="3radio-5">1.6</label>
-
-        <input type="radio" name="tabs30" id="3radio-6" value="1.5" >
-        <label class="tab" for="3radio-6">1.5</label>
-
-        <input type="radio" name="tabs30" id="3radio-7" value="1.4" >
-        <label class="tab" for="3radio-7">1.4</label>
-
-        <input type="radio" name="tabs30" id="3radio-8" value="1.3" >
-        <label class="tab" for="3radio-8">1.3</label>
-
-        <input type="radio" name="tabs30" id="3radio-9" value="1.2" >
-        <label class="tab" for="3radio-9">1.2</label>
-
-        <input type="radio" name="tabs30" id="3radio-101" value="1.1" >
-        <label class="tab" for="3radio-101">1.1</label>
-
-        <input type="radio" name="tabs30" id="3radio-10" value="1.0" >
-        <label class="tab" for="3radio-10">1.0</label>
-
-        <input type="radio" name="tabs30" id="3radio-11" value="0.9" >
-        <label class="tab" for="3radio-11">0.9</label>
-
-        <input type="radio" name="tabs30" id="3radio-12" value="0.8" >
-        <label class="tab" for="3radio-12">0.8</label>
-
-        <input type="radio" name="tabs30" id="3radio-13" value="0.7" >
-        <label class="tab" for="3radio-13">0.7</label>
-
-        <input type="radio" name="tabs30" id="3radio-14" value="0.6" >
-        <label class="tab" for="3radio-14">0.6</label>
-
-        <input type="radio" name="tabs30" id="3radio-15" value="0.5" >
-        <label class="tab" for="3radio-15">0.5</label>
-    </div>
-</div>
-
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
-
-{% endblock%}
+</script>
+</body>
+</html>

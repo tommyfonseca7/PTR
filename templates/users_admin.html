@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} PTR {% endblock %}</title>
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.">
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
 </head>
@@ -37,7 +38,7 @@
 
                 <a href="{{ url_for('athletes_admin') }}">
                     <span class="material-symbols-sharp">sports_martial_arts</span>
-                    <h3>Competidores</h3>
+                    <h3>Atletas</h3>
                 </a>
 
                 <a href="{{ url_for('judges_admin') }}" >
@@ -61,15 +62,38 @@
         <main>
             <div class="categoria-container">
                 <h1>Utilizadores</h1>
-                <a href="" class="edit">
-                    <span class="material-symbols-sharp">edit</span>
-                </a>
             </div>
-            <h2>Utilizadores</h2>
             <div class="competidores">
+
+                {% for user in users%}
+                <div class="competidor-item">
+                    <h4>Name: <p>{{ user.username}}</p> </h4>
+                    <h4>Date Added: <p>{{ user.date_added}}</p></h4>
+                    <h4>Tipo de Utilizador: <p>{{ user.user_type }}</p> </h4>
+                    {% if user.user_type != 'admin'%}
+                    <div class="options">
+                        {% if user.user_type == 'judge' %}
+                            <a href="{{ url_for('delete_judge', id=user.id) }}" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                        {% else %}
+                        <a href="{{ url_for('delete_user', id=user.id) }}" class="delete">
+                            <span class="material-symbols-sharp">delete</span>
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('update_user', id=user.id) }}" class="edit">
+                            <span class="material-symbols-sharp">edit</span>
+                        </a>
+                    </div>
+                    {%endif%}
+                </div>
+
+                
+
+                {%endfor%}
                 
                 
-                <div class="competidor-item add-arbitro" onclick="show_popup('bg-arbitro-add')">
+                <div class="competidor-item add-competidor" onclick="show_popup('bg-arbitro-add')">
                     <a>
                         <span class="material-symbols-sharp">add</span>
                         <h4>Adicionar Utilizador</h4>

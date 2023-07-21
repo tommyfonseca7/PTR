@@ -1,6 +1,6 @@
 from enum import Enum
 from os import abort
-from flask import Flask, render_template, request, flash, redirect, url_for, session
+from flask import Flask, render_template, request, flash, redirect, url_for, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user
 from flask_wtf import FlaskForm
@@ -13,14 +13,9 @@ from backend.models import Users,Category,Tournament,Judge,Athlete,Poomsae,app
 from flask_socketio import join_room, leave_room, emit, SocketIO
 import logging
 
+import uuid
 
-app.logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-app.logger.addHandler(file_handler)
-    
+
     
 #Flask_Login
 login_manager = LoginManager()
@@ -30,7 +25,6 @@ login_manager.login_view = 'login'
 from backend.API.api import user_api
 app.register_blueprint(user_api)
 
-socketio = SocketIO(app)
 
 
 
@@ -42,7 +36,8 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    tournaments = Tournament.query.all()
+    return render_template("index.html", tournaments = tournaments)
 
 
 
@@ -60,9 +55,12 @@ def login():
                     # Redirect the user to the stored URL
                     return redirect(session['next'])
                 # If there is no stored URL, redirect to the dashboard
-                if user.user_type == "admin" or "superadmin":
-                    return redirect(url_for('categories_admin'))
-                return redirect(url_for('index'))
+                if user.user_type == "judge":
+                    return redirect(url_for("lobby"))
+                if user.user_type == "admin" or user.user_type == "superadmin":
+                    return redirect(url_for('admin'))
+                else: 
+                    return redirect(url_for('index'))
             else:
                 flash("Wrong password - Try Again!")
         else:
@@ -80,8 +78,16 @@ def logout():
 def admin():
     tournaments = Tournament.query.all()
     categories = Category.query.all()
+    judges = Judge.query.all()
+    users = Users.query.all()
+    tournament_length = len(tournaments)
+    categories_length = len(categories)
+    judges_length = len(judges)
+    users_length = len(users)
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard.html", tournaments=tournaments, categories=categories)
+        return render_template("dashboard.html", tournaments=tournaments, categories=categories, judges=judges, users=users,
+                                tournament_length=tournament_length, categories_length=categories_length, judges_length=judges_length,
+                                  users_length=users_length )
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -126,6 +132,7 @@ def categories_admin():
         tournament_id = tournament.id
         
         add_instance(Category, name=name, tournament_id=tournament_id, tournament = tournament)
+        return redirect(url_for('categories_admin'))
 
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
@@ -156,7 +163,6 @@ def athletes_admin():
 
     
     if request.method == "POST":
-            app.logger.debug('Received a POST request!')
             flash("Form is validated!")  # Add this flash message for debugging purposes
             name = form.name.data
             category = form.category.data
@@ -165,6 +171,7 @@ def athletes_admin():
             tournament_id = tournament.id
             add_instance(Athlete, name=name, category_id=category_id, tournament_id = tournament_id, active = False)
             flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+            return redirect(url_for('athletes_admin'))
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
         return render_template("athletes_admin.html", form=form, athlete=athletes, categories=categories, tournament=tournament)
@@ -183,7 +190,6 @@ def judges_admin():
     form = JudgeForm()
     
     if request.method == "POST":
-            app.logger.debug('Received a POST request!')
             flash("Form is validated!")  # Add this flash message for debugging purposes
             user = Users.query.filter_by(username = form.username.data).first()
             username = form.username.data
@@ -199,6 +205,7 @@ def judges_admin():
             user = Users.query.filter_by(username = form.username.data).first()
             add_instance(Judge, user = user, id = user.id, category_id = category_id, tournament_id = tournament_id, type_of_jury = type_of_jury)
             flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+            return redirect(url_for('judges_admin'))
     
 
     if current_user.user_type == "admin" or "superadmin":
@@ -221,12 +228,12 @@ def users_admin():
     users = Users.query.all()
     
     if request.method == "POST":
-        app.logger.debug('Received a POST request!')
         flash("Form is validated!")  # Add this flash message for debugging purposes
         username = form.username.data
         real_name = form.real_name.data
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-        add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'Judge')
+        add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'User')
+        return redirect(url_for('users_admin'))
             
     if current_user.user_type == "admin" or "superadmin":
         return render_template("users_admin.html", form = form, users = users)
@@ -270,6 +277,7 @@ def get_tournaments():
     return render_template('tournaments_admin_page.html', tournaments=tournaments)
 
 
+
 @app.route("/create_user", methods = ['GET', 'POST'])
 def create_user():
     username = None
@@ -305,17 +313,19 @@ def create_category():
 
     return render_template('create_category.html', form=form)
 
-@app.route('/update_category/<int:id>', methods=['GET', 'POST'])
-def update_category(id):
-    category = Category.query.get_or_404(id)
-    form = CategoryForm(obj=category)
 
-    if form.validate_on_submit():
-        category.name = form.name.data
-        commit_changes()
-        return redirect(url_for('list_categories'))
+@app.route("/admin/users/delete/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def delete_user(id):
+    user = Users.query.get_or_404(id)
 
-    return render_template('update_category.html', form=form)
+    if user != 0:
+        delete_instance(user, id)
+        flash('User deleted!')
+        return redirect(url_for('users_admin'))
+
+    return render_template('dashboard_admin.html')
+
 
 @app.route("/admin/tournaments/delete/<int:tournament_id>", methods = ['GET', 'POST'])
 @login_required
@@ -335,6 +345,8 @@ def delete_athlete(athlete_id):
     athlete = Athlete.query.get_or_404(athlete_id)
 
     if athlete != 0:
+        athlete.list_of_poomsaes.clear()
+        commit_changes()
         delete_instance(athlete, athlete.id)
         flash('Athlete deleted!')
         return redirect(url_for('athletes_admin'))
@@ -345,11 +357,13 @@ def delete_athlete(athlete_id):
 def delete_category(id):
     category = Category.query.get_or_404(id)
 
-    if request.method == 'POST':
-        delete_instance(category)
-        return redirect(url_for('list_categories'))
+    if category != 0:
+        delete_instance(category, category.id)
+        return redirect(url_for('categories_admin'))
 
     return render_template('delete_category.html', category=category)
+
+
 
 @app.route('/category')
 def list_categories():
@@ -361,6 +375,91 @@ def tournament_category():
     athletes = Athlete.query.all()
     judges = Judge.query.all()
     return render_template('tournament_category.html', athletes=athletes, judges=judges)
+
+
+@app.route("/provas/<int:id>", methods = ['GET', 'POST'])
+def provas_by_id(id):
+    prova = Category.query.get_or_404(id)
+    athletes = prova.list_of_athletes
+    
+    for athlete in athletes:
+        strength_and_velocity = 0
+        rythm_and_coordenation = 0
+        energy_expression = 0
+        technical_component = 0
+        poomsae_median = 0
+        for poomsae in athlete.list_of_poomsaes:
+            strength_and_velocity += poomsae.strength_and_velocity
+            rythm_and_coordenation += poomsae.rythm_and_coordenation
+            energy_expression += poomsae.energy_expression
+            technical_component += poomsae.technical_component
+        for poomsae in athlete.list_of_poomsaes:
+            poomsae.strength_and_velocity = strength_and_velocity / len(athlete.list_of_poomsaes)
+            poomsae.rythm_and_coordenation = rythm_and_coordenation / len(athlete.list_of_poomsaes)
+            poomsae.energy_expression = energy_expression / len(athlete.list_of_poomsaes)
+            poomsae.technical_component = round(technical_component / len(athlete.list_of_poomsaes),2)
+            poomsae.presentation_component = round(poomsae.strength_and_velocity + poomsae.rythm_and_coordenation + poomsae.energy_expression,2)
+            poomsae_median = round(poomsae.technical_component + poomsae.presentation_component,2)
+        athlete.poomsae_median = poomsae_median
+
+    sorted_athlete_list = sorted(athletes, key=lambda x: x.poomsae_median, reverse=True)
+    for i, athlete in enumerate(sorted_athlete_list):
+        athlete.rank = i + 1
+    if prova != 0:
+        return render_template('prova_by_id.html', prova=prova, athletes= athletes)
+
+
+@app.route("/update_tournament/<int:id>", methods = ['GET', 'POST'])
+def update_tournament(id):
+    form = TournamentForm()
+    tournaments = Tournament.query.all()
+    tournament_to_update = Tournament.query.get_or_404(id)
+    if request.method == 'POST':
+        tournament_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Tornament Updated Sucessfully')
+            return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+    else:
+        return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+
+
+@app.route("/update_category/<int:id>", methods = ['GET', 'POST'])
+def update_category(id):
+    form = CategoryForm()
+    category_to_update = Category.query.get_or_404(id)
+    if request.method == 'POST':
+        category_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Category Updated Sucessfully')
+            return render_template("update_category.html", form=form, category_to_update = category_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_category.html", form=form, category_to_update = category_to_update)
+    else:
+        return render_template("update_category.html", form=form, category_to_update = category_to_update)
+    
+
+@app.route("/update_athlete/<int:id>", methods = ['GET', 'POST'])
+def update_athlete(id):
+    form = AthleteForm()
+    athlete_to_update = Athlete.query.get_or_404(id)
+    if request.method == 'POST':
+        athlete_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Athlete Updated Sucessfully')
+            return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+    else:
+        return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+
 
 
 
@@ -377,30 +476,51 @@ def update_user(id):
         user_to_update.password_hash2 = request.form['password_hash2'] 
         if(user_to_update.password_hash != user_to_update.password_hash2) :
             flash("Passwords não são iguais!")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
         user_to_update.password_hash = generate_password_hash(user_to_update.password_hash,"sha256") 
         user_to_update.password_hash2 = generate_password_hash(user_to_update.password_hash,"sha256") 
         try:
-            
             commit_changes()
             flash("User Updated sucessfully")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
         except:
             flash("Error!")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
     else:
-        return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+        return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
+    
 
-@app.route('/delete_user/<int:id>')
-def delete_user(id):
-    user_to_delete = Users.query.get_or_404(id)
-    try:
-        delete_instance(user_to_delete)
-        flash("User deleted sucessfully!")
-        return redirect(url_for('create_user'))
-    except: 
-        flash("There was a prbolem deleting user, try again!")
-        return redirect(url_for('get_users'))
+
+@app.route("/update_judge/<int:id>", methods = ['GET', 'POST'])
+def update_judge(id):
+    form = JudgeForm()
+    judge_to_update = Judge.query.get_or_404(id)
+    if request.method == "POST":
+        print(request.form)
+        judge_to_update.username = request.form['username']
+        judge_to_update.real_name = request.form['real_name']
+        judge_to_update.password_hash = request.form['password_hash']   
+        judge_to_update.password_hash2 = request.form['password_hash2']
+        judge_to_update.type_of_jury = request.form['type_of_jury'] 
+        if(judge_to_update.password_hash != judge_to_update.password_hash2) :
+            flash("Passwords não são iguais!")
+            return render_template("update.html", form=form, judge_to_update = judge_to_update, id = id)
+        judge_to_update.password_hash = generate_password_hash(judge_to_update.password_hash,"sha256") 
+        judge_to_update.password_hash2 = generate_password_hash(judge_to_update.password_hash,"sha256") 
+        try:
+            commit_changes()
+            flash("User Updated sucessfully")
+            return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+        except:
+            flash("Error!")
+            return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+    else:
+        return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+
+
+
+
+
     
 @app.route('/delete_judge/<int:id>')
 def delete_judge(id):
@@ -479,24 +599,16 @@ def create_admin():
 
 ########################################################################################################
 
-@app.route('/lobby/<int:tournament_id>', methods=['GET', 'POST'])
+@app.route('/lobby', methods=['GET', 'POST'])
 @login_required
-def lobby(tournament_id):
-    active_tournament = Tournament.query.get(tournament_id)
-    if active_tournament is None:
+def lobby():
+    categories = Category.query.all()
+    tournaments = Tournament.query.all()
+    judges = Judge.query.all()
+    if tournaments is None:
         abort(404)
 
-    if current_user.user_type != 'admin':
-        return redirect(url_for('judge_lobby', tournament_id=tournament_id))
-
-    if request.method == 'POST' and 'start_tournament' in request.form:
-        # Start the tournament and redirect to the judge interface
-        active_tournament.active = True
-        commit_changes()
-        return redirect(url_for('judgeInterface', tournament_id=tournament_id))
-
-    return render_template("lobby.html", tournament=active_tournament)
-
+    return render_template("lobby.html", tournaments=tournaments, categories = categories, current_user = current_user, judges = judges)
 
 @app.route('/judge_lobby/<int:tournament_id>')
 @login_required
@@ -511,122 +623,104 @@ def judge_lobby(tournament_id):
     return render_template("judge_lobby.html", tournament=active_tournament)
 
 
-socketio.on('connect')
-def on_connect():
-    # Join the appropriate SocketIO room based on the user type and tournament
-    if current_user.user_type == 'admin':
-        join_room(f'admin_room_{current_user.id}')
-    elif current_user.user_type == 'judge':
-        tournament_id = request.args.get('tournament_id', type=int)
-        if tournament_id:
-            join_room(f'judge_room_{tournament_id}_{current_user.id}')
 
 
-@socketio.on('disconnect')
-def on_disconnect():
-    # Leave the room on disconnect
-    if current_user.user_type == 'admin':
-        leave_room(f'admin_room_{current_user.id}')
-    elif current_user.user_type == 'judge':
-        tournament_id = request.args.get('tournament_id', type=int)
-        if tournament_id:
-            leave_room(f'judge_room_{tournament_id}_{current_user.id}')
+def generate_unique_poomsae_name(athlete_name):
+    # Generate a unique identifier (UUID) to be appended to the athlete's name
+    unique_id = uuid.uuid4().hex[:6]  # Take the first 6 characters of the UUID
+    return f"{athlete_name}Poomsae{unique_id}"
 
-
-@socketio.on('start_tournament')
-def start_tournament(data):
-    if current_user.user_type == 'admin':
-        tournament_id = data.get('tournament_id')
-        active_tournament = Tournament.query.get(tournament_id)
-        if active_tournament:
-            active_tournament.active = True
-            commit_changes()
-            emit('tournament_started', broadcast=True)
-
-@app.route('/juri_interface', methods=['GET', 'POST'])
+submitted_evaluations = {}
+# Route for handling judge interface for a specific category in a tournament
+@app.route('/<int:judge_id>/juri_interface', methods=['GET', 'POST'])
 @login_required
-def judgeInterface():
-    global active_athlete
-    if current_user.user_type not in ['admin', 'judge', 'superadmin']:
-        abort(403)
+def judge_interface(judge_id):
+    
+    if request.method == 'GET':
+        if current_user.user_type not in ['admin', 'judge', 'superadmin']:
+            abort(403)
 
-    active_tournament = None
-    for tournament in Tournament.query.all():
-        if tournament.active:
-            active_tournament = tournament
-            break
-    if active_tournament is None:
-        return render_template("notournament.html")
+        tournament_id = request.args.get('tournament_id')
+        category_id = request.args.get('category_id')
+        
+        active_athlete = Athlete.query.filter_by(category_id=category_id, tournament_id=tournament_id).first()
+        if active_athlete is not None:
+            active_athlete.active = True
+            commit_changes()
+        
 
-    if not session.get('tournament_active', False):
-        return redirect(url_for('lobby')) 
+        active_tournament = Tournament.query.get(tournament_id)
+        if not active_tournament or not active_tournament.active:
+            return redirect(url_for('lobby'))
 
+        active_category = Category.query.get(category_id)
+        if not active_category or active_category.tournament_id != active_tournament.id:
+            abort(404)
+            
+        session['tournament_active'] = True
+        if not session.get('tournament_active', False):
+            return redirect(url_for('lobby'))
 
     if request.method == 'POST':
+        # Process the evaluation form submission and store it in the 'submitted_evaluations' dictionary
         data = request.get_json()
         strength_and_velocity = data.get('strength_and_velocity')
         rythm_and_coordenation = data.get('rhythm_and_coordination')
         energy_expression = data.get('energy_expression')
         technical_component = data.get('technical_component')
         athlete = data.get('name')
+        athlete_id = data.get('athlete_id')
         tournament_id = data.get('tournament_id')
-        results = Poomsae(
-        name = athlete,
+        category_id = data.get('category_id')
+        judge_id = current_user.id
+        poomsae_name = generate_unique_poomsae_name(athlete)
+
+        
+        add_instance(Poomsae,name = poomsae_name,
         tournament_id = tournament_id,
         strength_and_velocity=strength_and_velocity,
         rythm_and_coordenation=rythm_and_coordenation,
         energy_expression=energy_expression,
-        technical_component=technical_component
-    )
-    
-        add_instance(results)
+        technical_component=technical_component)
+        
+        results = Poomsae.query.filter_by(name = poomsae_name).first()
+
+        active_athlete = Athlete.query.filter_by(id=athlete_id).first()
         active_athlete.list_of_poomsaes.append(results)
         commit_changes()
-        next_active_athlete = Athlete.query.filter(Athlete.id > active_athlete.id).first()
-
-        if next_active_athlete != None:
-                # Set the next athlete as active
-                active_athlete.active = False
-                next_active_athlete.active = True
-                commit_changes()
-                return redirect(url_for('judgeInterface'))
-        active_athlete.active = False
-        print(active_athlete.active)
-        commit_changes()
+        
+        active_category = Category.query.filter_by(id = category_id).first()
+        active_tournament = Tournament.query.filter_by(id = tournament_id).first()
         
 
-        socketio.emit('evaluation_submitted', {
-            'athlete_name': athlete.name,
+        active_athlete.active = False
+        if Athlete.query.filter((Athlete.id > active_athlete.id) & (Athlete.category_id == category_id) & (Athlete.tournament_id == tournament_id)).first() == None:
+
+            response_data = {
+            'next_athlete_name': None,
             'tournament_name': active_tournament.name,
-            'evaluation': {
-                'strength_and_velocity': strength_and_velocity,
-                'rythm_and_coordenation': rythm_and_coordenation,
-                'energy_expression': energy_expression,
-                'technical_component': technical_component
+            'tournamentIdElement' : active_tournament.id,
+            'categoryIdElement' : active_category.id,
             }
-        }, room=current_user.id)
+            return response_data
+        
+        next_active_athlete = Athlete.query.filter((Athlete.id > active_athlete.id) & (Athlete.category_id == category_id) & (Athlete.tournament_id == tournament_id)).first()
+        if next_active_athlete is not None:
+            next_active_athlete.active = True
+   
+            commit_changes()
+            response_data = {
+            'next_athlete_name': next_active_athlete.name if next_active_athlete else None,
+            'tournament_name': active_tournament.name,
+            'tournamentIdElement' : active_tournament.id,
+            'categoryIdElement' : active_category.id,
+            'athlete_id' : next_active_athlete.id
+            }
+            return jsonify(response_data)
 
-        submitted_count = session.get('submitted_count', 0)
-        submitted_count += 1
-        session['submitted_count'] = submitted_count
+        
 
-        if submitted_count == len(active_tournament.list_of_judges.all()):
-            session.pop('submitted_count')  # Reset the submitted count
-
-            next_active_athlete = Athlete.query.filter(Athlete.id > active_athlete.id).first()
-
-            if next_active_athlete is not None:
-                active_athlete.active = False
-                next_active_athlete.active = True
-                commit_changes()
-
-                socketio.emit('next_athlete', {'athlete_name': next_active_athlete.name, 'tournament_name': active_tournament.name},
-                             broadcast=True)
-
-    return render_template("judge_interface.html", active_athlete=active_athlete, tournament=active_tournament)
-
-
-
+    return render_template("judge_interface.html", active_athlete=active_athlete, active_tournament=active_tournament, active_category=active_category,current_user = current_user)
 
 
 ########################################################################################################

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} PTR {% endblock %}</title>
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.png">
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
     <script src="https://unpkg.com/htmx.org@1.9.3"></script>
@@ -38,7 +39,7 @@
 
                 <a href="{{ url_for('athletes_admin') }}">
                     <span class="material-symbols-sharp">sports_martial_arts</span>
-                    <h3>Competidores</h3>
+                    <h3>Atletas</h3>
                 </a>
 
                 <a href="{{ url_for('judges_admin') }}" class="active">
@@ -67,7 +68,7 @@
                 {% for judges in judges %}
                 <div class="arbitro-item">
                     <h3>Nome Real: {{ judges.user.real_name }}</h3>
-                    <h4>Tipo de Juri{{ judges.type_of_jury }}</h4>
+                    <h4>Tipo de Juri: {{ judges.type_of_jury }}</h4>
                     {% for categories in categories%}
                     {% if categories.id == judges.category_id%}
                     <h5>Categoria : {{ categories.name }}</h3>
@@ -82,28 +83,12 @@
                         <a href="{{ url_for('delete_judge', id=judges.id) }}" class="delete">
                             <span class="material-symbols-sharp">delete</span>
                         </a>
-                        <a href="" class="edit">
+                        <a href="{{ url_for('update_judge', id=judges.id) }}" class="edit">
                             <span class="material-symbols-sharp">edit</span>
                         </a>
                     </div>
                 </div>
                 {% endfor %}
-                
-
-                <div class="arbitro-item">
-                    <h3>Tipo de Arbitro</h3>
-                    <h5>Categoria</h3>
-                    <small class="text-muted">Torneio</small>
-                    <div class="options">
-                        <a href="" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
-                            <span class="material-symbols-sharp">edit</span>
-                        </a>
-                    </div>
-                </div>
-        
                 
                 <div class="competidor-item add-arbitro" onclick="show_popup('bg-arbitro-add')">
                     <a>

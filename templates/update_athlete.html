@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.png">
+    <link rel="stylesheet" href="../static/css/styleadmindash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
+</head>
+<body class="admin-body">
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/logo.png" alt="">
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('admin') }}" >
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="{{ url_for('tournaments_admin') }}" >
+                    <span class="material-symbols-sharp">diversity_2</span>
+                    <h3>Torneios</h3>
+                </a>
+
+                <a href="{{ url_for('categories_admin') }}">
+                    <span class="material-symbols-sharp">category</span>
+                    <h3>Categorias</h3>
+                </a>
+
+                <a href="{{ url_for('athletes_admin') }}" class="active">
+                    <span class="material-symbols-sharp">sports_martial_arts</span>
+                    <h3>Competidores</h3>
+                </a>
+
+                <a href="{{ url_for('judges_admin') }}">
+                    <span class="material-symbols-sharp">gavel</span>
+                    <h3>Arbitros</h3>
+                </a>
+
+                <a href="{{ url_for('users_admin') }}">
+                    <span class="material-symbols-sharp">person</span>
+                    <h3>Utilizadores</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            
+        </aside>
+
+        <main>
+            <h1>{{athlete_to_update.name}}</h1>
+
+            <form action="/athlete_to_update/{{athlete_to_update.id}}" method="POST">
+                {{ form.hidden_tag() }}
+
+                {{ form.name.label }}
+                {{ form.name(value = athlete_to_update.name) }}
+
+                {{ form.submit }}
+            </form>
+            
+            {% for message in get_flashed_messages() %}
+            <div class="alert">
+                <p>{{ message}}</p> 
+            </div>
+            {% endfor %}
+            
+        </main>
+
+    </div>
+
+<script src="..\static\script.js">
+
+    
+</script>
+</body>
+</html>

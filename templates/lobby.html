@@ -1,54 +1,47 @@
-{% extends 'base_without_headers.html' %}
+{% extends 'base-new.html' %}
 {% block title %}PTR - DashBoard{% endblock %}
 
 {% block content%}
-<header class="juri-header">
-    <img src="/static/images/logo.png" alt="" srcset="" class="middle-top-logo">
-</header>
 
-<h1>Welcome, Judge </h1>
-<h2>Tournaments Assigned:</h2>
-<ul>
-    {% for tournament in current_judge.tournaments %}
-    {% for athlete in tournament.list_of_athletes %}
-    <li>
-        <a href="{{ url_for('evaluation', tournament_id=tournament.id, athlete_id=athlete.id) }}"
-           data-tournament-id="{{ tournament.id }}" data-athlete-id="{{ athlete.id }}">
-            {{ athlete.name }} - {{ tournament.name }}
-        </a>
-    </li>
+<main>
+    <h1>Torneios a Decorrer</h1>
+    {% for tournament in tournaments %}
+    <div class="torneios-categorias">
+        <button onclick="show_hide('{{ tournament.name }}')" class="btn-categorias">
+            <h3>{{ tournament.name }}</h3>
+            <span class="material-symbols-sharp">expand_more</span>
+        </button>
+        
+        <div class="categorias" id="{{ tournament.name }}">
+
+                {% for categories in categories %}
+                {% if categories.tournament_id == tournament.id %}
+                {% if current_user.user_type == "admin" or  current_user.user_type == "superadmin" or current_user.user_type == "judge"%}
+                {% for judges in judges %}
+                {% if judges.category_id == categories.id %}
+                <div class="categoria-item">
+                    <h3>{{ categories.name }}</h3>
+                    <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
+                    <div class="options">
+                        <a href="{{ url_for('judge_interface', judge_id = judges.id, category_id=categories.id, tournament_id = tournament.id) }}" class="more">
+                            <span class="material-symbols-sharp">add</span>
+                            <h4>Começar a avaliar</h4>
+                          </a>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+        </div>
+    </div>
     {% endfor %}
-    {% endfor %}
-</ul>
+  </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-<script>
-    const socket = io.connect();
-    const current_judge = { name: 'Judge 1' }; // Replace this with the actual judge's data from the server-side
+</div>
 
-    document.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            const tournamentId = e.target.getAttribute('data-tournament-id');
-            const athleteId = e.target.getAttribute('data-athlete-id');
 
-            // Check if the judge is assigned to the selected tournament
-            // You can handle this check on the server-side as well for more security
-            if (current_judge.tournaments.includes(tournamentId)) {
-                // If the judge is assigned, join the tournament's evaluation
-                socket.emit('join_evaluation', { tournament_id: tournamentId, athlete_id: athleteId });
-                window.location.href = e.target.href;
-            } else {
-                // If the judge is not assigned, display an error message or redirect
-                alert('You are not assigned to this tournament.');
-            }
-        });
-    });
 
-    socket.on('no_more_athletes', () => {
-        // Handle the case when there are no more athletes to evaluate
-        // For example, display a message or redirect to the lobby page
-        window.location.href = '/lobby'; // Redirect to the lobby page
-    });
-</script>
+<script src="../static/script.js"></script>
 {% endblock%}
