@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} PTR {% endblock %}</title>
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.png">
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
 </head>
@@ -67,13 +68,15 @@
                 <div class="torneio-item">
                     <h3>{{ tournament.name }}</h3>
                     <small class="text-muted">08/07/2023</small>
-                    <h5 id="tournament_id">{{ tournament.id }}</h5>
+                    <h5 id="tournament_id">ID: {{ tournament.id }}</h5>
 
                     <div class="options">
-                        <a href="{{ url_for('delete_tournament', tournament_id=tournament.id) }}" class="delete">
-                            <span class="material-symbols-sharp">delete</span>
-                        </a>
-                        <a href="" class="edit">
+                        {% if tournament.list_of_categories.count() == 0 %}
+                            <a href="{{ url_for('delete_tournament', tournament_id=tournament.id) }}" class="delete">
+                                <span class="material-symbols-sharp">delete</span>
+                            </a>
+                        {% endif %}
+                        <a href="{{ url_for('update_tournament', id=tournament.id) }}" class="edit">
                             <span class="material-symbols-sharp">edit</span>
                         </a>
                     </div>

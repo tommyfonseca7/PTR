@@ -61,7 +61,7 @@ def login():
                     return redirect(session['next'])
                 # If there is no stored URL, redirect to the dashboard
                 if user.user_type == "admin" or "superadmin":
-                    return redirect(url_for('categories_admin'))
+                    return redirect(url_for('admin'))
                 return redirect(url_for('index'))
             else:
                 flash("Wrong password - Try Again!")
@@ -80,8 +80,16 @@ def logout():
 def admin():
     tournaments = Tournament.query.all()
     categories = Category.query.all()
+    judges = Judge.query.all()
+    users = Users.query.all()
+    tournament_length = len(tournaments)
+    categories_length = len(categories)
+    judges_length = len(judges)
+    users_length = len(users)
     if current_user.user_type == "admin" or "superadmin":
-        return render_template("dashboard.html", tournaments=tournaments, categories=categories)
+        return render_template("dashboard.html", tournaments=tournaments, categories=categories, judges=judges, users=users,
+                                tournament_length=tournament_length, categories_length=categories_length, judges_length=judges_length,
+                                  users_length=users_length )
     else:
         flash("You are not an admin!")
         return render_template("index.html")
@@ -305,17 +313,19 @@ def create_category():
 
     return render_template('create_category.html', form=form)
 
-@app.route('/update_category/<int:id>', methods=['GET', 'POST'])
-def update_category(id):
-    category = Category.query.get_or_404(id)
-    form = CategoryForm(obj=category)
 
-    if form.validate_on_submit():
-        category.name = form.name.data
-        commit_changes()
-        return redirect(url_for('list_categories'))
+@app.route("/admin/users/delete/<int:id>", methods = ['GET', 'POST'])
+@login_required
+def delete_user(id):
+    user = Users.query.get_or_404(id)
 
-    return render_template('update_category.html', form=form)
+    if user != 0:
+        delete_instance(user, id)
+        flash('User deleted!')
+        return redirect(url_for('users_admin'))
+
+    return render_template('dashboard_admin.html')
+
 
 @app.route("/admin/tournaments/delete/<int:tournament_id>", methods = ['GET', 'POST'])
 @login_required
@@ -345,11 +355,13 @@ def delete_athlete(athlete_id):
 def delete_category(id):
     category = Category.query.get_or_404(id)
 
-    if request.method == 'POST':
-        delete_instance(category)
-        return redirect(url_for('list_categories'))
+    if category != 0:
+        delete_instance(category, category.id)
+        return redirect(url_for('categories_admin'))
 
     return render_template('delete_category.html', category=category)
+
+
 
 @app.route('/category')
 def list_categories():
@@ -361,6 +373,59 @@ def tournament_category():
     athletes = Athlete.query.all()
     judges = Judge.query.all()
     return render_template('tournament_category.html', athletes=athletes, judges=judges)
+
+
+@app.route("/update_tournament/<int:id>", methods = ['GET', 'POST'])
+def update_tournament(id):
+    form = TournamentForm()
+    tournaments = Tournament.query.all()
+    tournament_to_update = Tournament.query.get_or_404(id)
+    if request.method == 'POST':
+        tournament_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Tornament Updated Sucessfully')
+            return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+    else:
+        return render_template("update_tournament.html", form=form, tournament_to_update = tournament_to_update)
+
+
+@app.route("/update_category/<int:id>", methods = ['GET', 'POST'])
+def update_category(id):
+    form = CategoryForm()
+    category_to_update = Category.query.get_or_404(id)
+    if request.method == 'POST':
+        category_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Category Updated Sucessfully')
+            return render_template("update_category.html", form=form, category_to_update = category_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_category.html", form=form, category_to_update = category_to_update)
+    else:
+        return render_template("update_category.html", form=form, category_to_update = category_to_update)
+    
+
+@app.route("/update_athlete/<int:id>", methods = ['GET', 'POST'])
+def update_athlete(id):
+    form = AthleteForm()
+    athlete_to_update = Athlete.query.get_or_404(id)
+    if request.method == 'POST':
+        athlete_to_update.name = request.form['name']
+        try:
+            commit_changes()
+            flash('Athlete Updated Sucessfully')
+            return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+        except:
+            flash('Error!')
+            return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+    else:
+        return render_template("update_athlete.html", form=form, athlete_to_update = athlete_to_update)
+
 
 
 
@@ -377,30 +442,51 @@ def update_user(id):
         user_to_update.password_hash2 = request.form['password_hash2'] 
         if(user_to_update.password_hash != user_to_update.password_hash2) :
             flash("Passwords não são iguais!")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
         user_to_update.password_hash = generate_password_hash(user_to_update.password_hash,"sha256") 
         user_to_update.password_hash2 = generate_password_hash(user_to_update.password_hash,"sha256") 
         try:
-            
             commit_changes()
             flash("User Updated sucessfully")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
         except:
             flash("Error!")
-            return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+            return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
     else:
-        return render_template("update.html", form=form, user_to_update = user_to_update, id = id)
+        return render_template("update_user.html", form=form, user_to_update = user_to_update, id = id)
+    
 
-@app.route('/delete_user/<int:id>')
-def delete_user(id):
-    user_to_delete = Users.query.get_or_404(id)
-    try:
-        delete_instance(user_to_delete)
-        flash("User deleted sucessfully!")
-        return redirect(url_for('create_user'))
-    except: 
-        flash("There was a prbolem deleting user, try again!")
-        return redirect(url_for('get_users'))
+
+@app.route("/update_judge/<int:id>", methods = ['GET', 'POST'])
+def update_judge(id):
+    form = JudgeForm()
+    judge_to_update = Judge.query.get_or_404(id)
+    if request.method == "POST":
+        print(request.form)
+        judge_to_update.username = request.form['username']
+        judge_to_update.real_name = request.form['real_name']
+        judge_to_update.password_hash = request.form['password_hash']   
+        judge_to_update.password_hash2 = request.form['password_hash2']
+        judge_to_update.type_of_jury = request.form['type_of_jury'] 
+        if(judge_to_update.password_hash != judge_to_update.password_hash2) :
+            flash("Passwords não são iguais!")
+            return render_template("update.html", form=form, judge_to_update = judge_to_update, id = id)
+        judge_to_update.password_hash = generate_password_hash(judge_to_update.password_hash,"sha256") 
+        judge_to_update.password_hash2 = generate_password_hash(judge_to_update.password_hash,"sha256") 
+        try:
+            commit_changes()
+            flash("User Updated sucessfully")
+            return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+        except:
+            flash("Error!")
+            return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+    else:
+        return render_template("update_judge.html", form=form, judge_to_update = judge_to_update, id = id)
+
+
+
+
+
     
 @app.route('/delete_judge/<int:id>')
 def delete_judge(id):

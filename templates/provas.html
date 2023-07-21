@@ -34,7 +34,7 @@
                       {% if categories.tournament_id == tournament.id %}
                       <div class="categoria-item">
                           <h3>{{ categories.name }}</h3>
-                          <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
+                          <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
                           <div class="options">
                               <a href="" class="more">
                                   <span class="material-symbols-sharp">add</span>

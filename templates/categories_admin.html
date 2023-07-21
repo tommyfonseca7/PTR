@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} PTR {% endblock %}</title>
+    <title>{% block title %} PTR - DASHBOARD {% endblock %}</title>
+    <link rel="icon" href="../static/images/logo.png">
     <link rel="stylesheet" href="../static/css/styleadmindash.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp"/>
 </head>
@@ -74,16 +75,14 @@
                         {% if categories.tournament_id == tournament.id %}
                         <div class="categoria-item">
                             <h3>{{ categories.name }}</h3>
-<<<<<<< HEAD
-                            <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
-=======
-                            <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
->>>>>>> 261e40ab2c2b9fbdffc91a5234bc9e7a493cf4f6
+                            <small class="text-muted">{{ categories.list_of_athletes.count() }}</small>
                             <div class="options">
-                                <a href="" class="delete">
+                                {% if categories.list_of_athletes.count() == 0 and  categories.list_of_judges.count() == 0 %}
+                                <a href="{{ url_for('delete_category', id=categories.id) }}" class="delete">
                                     <span class="material-symbols-sharp">delete</span>
                                 </a>
-                                <a href="" class="edit">
+                                {% endif %}
+                                <a href="{{ url_for('update_category', id=categories.id) }}" class="edit">
                                     <span class="material-symbols-sharp">edit</span>
                                 </a>
                             </div>
