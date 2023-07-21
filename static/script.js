@@ -34,7 +34,7 @@ function cancelReduceBy0_3() {
     var resultElement = document.getElementById("compt-result");
     var result = parseFloat(resultElement.innerHTML);
     result += 0.3;
-    result = Math.min(result, 4.0); // Ensure the result doesn't exceed 4.0
+    result = Math.min(result, 4.0); 
     resultElement.innerHTML = result.toFixed(1);
 }
 
@@ -42,7 +42,7 @@ function cancelReduceBy0_1() {
     var resultElement = document.getElementById("compt-result");
     var result = parseFloat(resultElement.innerHTML);
     result += 0.1;
-    result = Math.min(result, 4.0); // Ensure the result doesn't exceed 4.0
+    result = Math.min(result, 4.0); 
     resultElement.innerHTML = result.toFixed(1);
 }
 
@@ -92,7 +92,6 @@ radioButtons.forEach(function(radioButton) {
         if (this.checked) {
           selectedValue = this.value;
           console.log('Selected value:', selectedValue);
-          // Perform any additional actions based on the selected value
         }
       });
 });
@@ -119,9 +118,8 @@ console.log('Selected value:', selectedValue2);
 console.log('Selected value:', selectedValue3);
 
 document.getElementById("button-submit-juri").addEventListener('click', function (event) {
-  event.preventDefault(); // Prevent the form from submitting normally
+  event.preventDefault();
 
-  // Extract the score from the form
   var athleteName = document.getElementById("athlete_name").textContent;
   var tournamentId = document.getElementById("tournament_id").value;
   var judgeId = document.getElementById("judge_id").value;
@@ -143,7 +141,6 @@ document.getElementById("button-submit-juri").addEventListener('click', function
       technical_component: comptResult
   };
 
-  // Send the form data to the server using the fetch API
   fetch(`/${judgeId}/juri_interface`, {
       method: "POST",
       headers: {
@@ -153,15 +150,13 @@ document.getElementById("button-submit-juri").addEventListener('click', function
   })
   .then(function (response) {
       if (response.ok) {
-          return response.json(); // Parse the response body as JSON
+          return response.json(); 
       } else {
-          throw new Error("Failed to save results"); // Throw an error if the response is not OK
+          throw new Error("Failed to save results");
       }
   })
   .then(function (data) {
-      // Handle the response data returned by the server
       if (data.next_athlete_name) {
-          // If there's a next athlete, update the athlete name and tournament name
           var athleteNameElement = document.getElementById('athlete_name');
           var tournamentNameElement = document.getElementById('tournament_name');
           var tournamentIdElement = document.getElementById("tournament_id");
@@ -173,17 +168,15 @@ document.getElementById("button-submit-juri").addEventListener('click', function
           categoryIdElement.textContent = data.categoryIdElement;
           athleteIdElement.textContent = data.athlete_id;
           document.getElementById("athlete_id").value = data.athlete_id;
-          // You can also display a message to indicate that the form was successfully submitted
+
           alert("Form submitted successfully. Moving to the next athlete.");
       }
       else {
-        // If there's no next athlete, it means the tournament is finished
         alert("Tournament finished. Returning to the lobby.");
-        window.location.href = "/lobby"; // Redirect to the lobby page
+        window.location.href = "/lobby"; 
     }
   })
   .catch(function (error) {
-      // Handle any errors that occur during form submission
       console.error('Error:', error);
       alert("An error occurred during form submission. Please try again.");
   });
