@@ -74,7 +74,11 @@
                         {% if categories.tournament_id == tournament.id %}
                         <div class="categoria-item">
                             <h3>{{ categories.name }}</h3>
+<<<<<<< HEAD
                             <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
+=======
+                            <small class="text-muted">{{ categories.list_of_athletes|length }}</small>
+>>>>>>> 261e40ab2c2b9fbdffc91a5234bc9e7a493cf4f6
                             <div class="options">
                                 <a href="" class="delete">
                                     <span class="material-symbols-sharp">delete</span>
@@ -95,6 +99,7 @@
                 </div>
             </div>
             {% endfor %}
+
 
             <div class="bg-popup" id="bg-popup-category">
                 <div class="add-category-popup">

@@ -32,6 +32,7 @@
 ./binlog.000032
 ./binlog.000033
 ./binlog.000034
+<<<<<<< HEAD
 ./binlog.000035
 ./binlog.000036
 ./binlog.000037
@@ -52,3 +53,10 @@
 ./binlog.000052
 ./binlog.000053
 ./binlog.000054
+=======
+<<<<<<< Updated upstream
+=======
+./binlog.000035
+./binlog.000036
+>>>>>>> Stashed changes
+>>>>>>> 261e40ab2c2b9fbdffc91a5234bc9e7a493cf4f6

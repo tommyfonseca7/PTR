@@ -227,7 +227,6 @@ def users_admin():
         real_name = form.real_name.data
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
         add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'Judge')
-        add_instance(Users, username = username, real_name = real)
             
     if current_user.user_type == "admin" or "superadmin":
         return render_template("users_admin.html", form = form, users = users)
@@ -245,6 +244,12 @@ def get_users():
     users = Users.query.all()
     return render_template('users_admin_page.html', users=users)
 
+
+@app.route("/provas" , methods = ['GET'])
+def provas():
+    tournaments = Tournament.query.all()
+    categories = Category.query.all()
+    return render_template('provas.html', tournaments=tournaments, categories=categories)
 
 
 @app.route("/poomsae_athlete", methods = ['GET']) 
