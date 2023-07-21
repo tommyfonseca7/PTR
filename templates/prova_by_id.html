@@ -22,41 +22,27 @@
         </header>
 
         <main>
-            <h1>Categoria - Nome da categoria</h1>
+            <h1>Categoria - {{ prova.name }}</h1>
             <table class="content-table">
                 <thead>
                     <tr>
                         <th>Lugar</th>
                         <th>Nome</th>
-                        <th>Apresentação Poomsae 1</th>
-                        <th>Tecnica Poomsae 1</th>
-                        <th>Média Poomsae 1</th>
-                        <th>Apresentação Poomsae 2</th>
-                        <th>Tecnica Poomsae 2</th>
-                        <th>Média Poomsae 2</th>
+                        <th>Apresentação Poomsae</th>
+                        <th>Tecnica Poomsae</th>
+                        <th>Média Poomsae</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for athlete in athletes %}
                     <tr>
-                        <th>1</th>
-                        <th>Joao Costa</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
+                        <th>{{ athlete.rank }}</th>
+                        <th>{{ athlete.name }}</th>
+                        <th>{{ athlete.list_of_poomase.get(0).presentation_component }}</th>
+                        <th>{{ athlete.list_of_poomase.get(0).technical_component }}</th>
+                        <th>{{ athlete.poomsae_median }}</th>
                     </tr>
-                    <tr>
-                        <th>2</th>
-                        <th>Joao Costa</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                        <th>4.0</th>
-                        <th>6.0</th>
-                        <th>10.0</th>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </main>

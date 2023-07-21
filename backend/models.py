@@ -52,21 +52,25 @@ class Athlete(db.Model, UserMixin):
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'))
     active = db.Column(db.Boolean, default= False)
     list_of_poomsaes = db.relationship('Poomsae', secondary='athlete_poomsae')
+    poomsae_median = db.Column(db.Double)
     athlete_poomsae = db.Table('athlete_poomsae',
     db.Column('athlete_id', db.Integer, db.ForeignKey('athlete.id'), primary_key=True),
-    db.Column('poomsae_id', db.Integer, db.ForeignKey('poomsae.id'), primary_key=True)
-)
+    db.Column('poomsae_id', db.Integer, db.ForeignKey('poomsae.id'), primary_key=True))
+    rank = db.Column(db.Integer)
 
 
 class Poomsae(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    strength_and_velocity = db.Column(db.Integer)
-    rythm_and_coordenation = db.Column(db.Integer)
-    energy_expression = db.Column(db.Integer)
-    technical_component = db.Column(db.Integer)
+    strength_and_velocity = db.Column(db.Double)
+    rythm_and_coordenation = db.Column(db.Double)
+    energy_expression = db.Column(db.Double)
+    technical_component = db.Column(db.Double)
+    presentation_component = db.Column(db.Double)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournament.id'), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    median = db.Column(db.Double)
+
 
 
     @property

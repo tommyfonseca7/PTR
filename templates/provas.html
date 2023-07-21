@@ -36,7 +36,7 @@
                           <h3>{{ categories.name }}</h3>
                           <small class="text-muted">{{ categories.list_of_athletes.length }}</small>
                           <div class="options">
-                              <a href="" class="more">
+                              <a href="{{ url_for('provas_by_id', id=categories.id) }}" class="more">
                                   <span class="material-symbols-sharp">add</span>
                                   <h4>Ver mais</h4>
                                 </a>

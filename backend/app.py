@@ -278,6 +278,7 @@ def get_tournaments():
     return render_template('tournaments_admin_page.html', tournaments=tournaments)
 
 
+
 @app.route("/create_user", methods = ['GET', 'POST'])
 def create_user():
     username = None
@@ -373,6 +374,38 @@ def tournament_category():
     athletes = Athlete.query.all()
     judges = Judge.query.all()
     return render_template('tournament_category.html', athletes=athletes, judges=judges)
+
+
+@app.route("/provas/<int:id>", methods = ['GET', 'POST'])
+def provas_by_id(id):
+    prova = Category.query.get_or_404(id)
+    athletes = prova.list_of_athletes
+    
+    for athlete in athletes:
+        strength_and_velocity = 0
+        rythm_and_coordenation = 0
+        energy_expression = 0
+        technical_component = 0
+        poomsae_median = 0
+        for poomsae in athlete.list_of_poomsae:
+            strength_and_velocity += poomsae.strength_and_velocity
+            rythm_and_coordenation += poomsae.rythm_and_coordenation
+            energy_expression += poomsae.energy_expression
+            technical_component += poomsae.technical_component
+        for poomsae in athlete.list_of_poomsae:
+            poomsae.strength_and_velocity = strength_and_velocity / athlete.list_of_poomsae.count()
+            poomsae.rythm_and_coordenation = rythm_and_coordenation / athlete.list_of_poomsae.count()
+            poomsae.energy_expression = energy_expression / athlete.list_of_poomsae.count()
+            poomsae.technical_component = technical_component / athlete.list_of_poomsae.count()
+            poomsae.presentation_component = poomsae.strength_and_velocity + poomsae.rythm_and_coordenation + poomsae.energy_expression
+            poomsae_median = poomsae.technical_component + poomsae.presentation_component
+        athlete.poomsae_median = poomsae_median
+
+    sorted_athlete_list = sorted(athletes, key=lambda x: x.poomsae_median, reverse=True)
+    for i, athlete in enumerate(sorted_athlete_list):
+        athlete.rank = i + 1
+    if prova != 0:
+        return render_template('prova_by_id.html', prova=prova, athletes= athletes)
 
 
 @app.route("/update_tournament/<int:id>", methods = ['GET', 'POST'])
