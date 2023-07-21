@@ -47,14 +47,10 @@ def login():
     if form.validate_on_submit():
         user = Users.query.filter_by(username=form.username.data).first()
         if user:
-            #Check Pass_hash
             if check_password_hash(user.password_hash, form.password.data):
                 login_user(user)
-                # Check if there is a stored URL in the session
                 if 'next' in session:
-                    # Redirect the user to the stored URL
                     return redirect(session['next'])
-                # If there is no stored URL, redirect to the dashboard
                 if user.user_type == "judge":
                     return redirect(url_for("lobby"))
                 if user.user_type == "admin" or user.user_type == "superadmin":
@@ -163,14 +159,14 @@ def athletes_admin():
 
     
     if request.method == "POST":
-            flash("Form is validated!")  # Add this flash message for debugging purposes
+            flash("Form is validated!")  
             name = form.name.data
             category = form.category.data
             category_id = category.id
             tournament = form.tournament.data
             tournament_id = tournament.id
             add_instance(Athlete, name=name, category_id=category_id, tournament_id = tournament_id, active = False)
-            flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+            flash("New athlete added successfully!")  
             return redirect(url_for('athletes_admin'))
 
     if current_user.user_type == "admin" or current_user.user_type == "superadmin":
@@ -190,7 +186,7 @@ def judges_admin():
     form = JudgeForm()
     
     if request.method == "POST":
-            flash("Form is validated!")  # Add this flash message for debugging purposes
+            flash("Form is validated!") 
             user = Users.query.filter_by(username = form.username.data).first()
             username = form.username.data
             real_name = form.real_name.data
@@ -204,7 +200,7 @@ def judges_admin():
                 add_instance(Users,username = username, real_name = real_name, password_hash = hashed_pw, user_type = 'Judge')
             user = Users.query.filter_by(username = form.username.data).first()
             add_instance(Judge, user = user, id = user.id, category_id = category_id, tournament_id = tournament_id, type_of_jury = type_of_jury)
-            flash("New athlete added successfully!")  # Add this flash message to confirm athlete addition
+            flash("New athlete added successfully!") 
             return redirect(url_for('judges_admin'))
     
 
@@ -228,7 +224,7 @@ def users_admin():
     users = Users.query.all()
     
     if request.method == "POST":
-        flash("Form is validated!")  # Add this flash message for debugging purposes
+        flash("Form is validated!")  
         username = form.username.data
         real_name = form.real_name.data
         hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
@@ -626,12 +622,10 @@ def judge_lobby(tournament_id):
 
 
 def generate_unique_poomsae_name(athlete_name):
-    # Generate a unique identifier (UUID) to be appended to the athlete's name
-    unique_id = uuid.uuid4().hex[:6]  # Take the first 6 characters of the UUID
+    unique_id = uuid.uuid4().hex[:6]  
     return f"{athlete_name}Poomsae{unique_id}"
 
 submitted_evaluations = {}
-# Route for handling judge interface for a specific category in a tournament
 @app.route('/<int:judge_id>/juri_interface', methods=['GET', 'POST'])
 @login_required
 def judge_interface(judge_id):
@@ -662,7 +656,6 @@ def judge_interface(judge_id):
             return redirect(url_for('lobby'))
 
     if request.method == 'POST':
-        # Process the evaluation form submission and store it in the 'submitted_evaluations' dictionary
         data = request.get_json()
         strength_and_velocity = data.get('strength_and_velocity')
         rythm_and_coordenation = data.get('rhythm_and_coordination')
