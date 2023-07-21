@@ -72,9 +72,9 @@
                     {% endif %}
                     {% endfor %}
                     {% for tournament in tournament %}
-                    {% if athlete.tournament_id == tournament.id%}
-                    <small class="text-muted">{{tournament.name}}</small>
-                    {% endif %}
+                        {% if athlete.tournament_id == tournament.id%}
+                        <small class="text-muted">{{tournament.name}}</small>
+                        {% endif %}
                     {% endfor %}
                     <div class="options">
                         <a href="{{ url_for('delete_athlete', athlete_id=athlete.id) }}" class="delete">

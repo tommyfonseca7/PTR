@@ -75,7 +75,7 @@
                         {% if categories.tournament_id == tournament.id %}
                         <div class="categoria-item">
                             <h3>{{ categories.name }}</h3>
-                            <small class="text-muted">{{ categories.list_of_athletes.count() }}</small>
+                            <small class="text-muted">Número Atletas: {{ categories.list_of_athletes.count() }}</small>
                             <div class="options">
                                 {% if categories.list_of_athletes.count() == 0 and  categories.list_of_judges.count() == 0 %}
                                 <a href="{{ url_for('delete_category', id=categories.id) }}" class="delete">
